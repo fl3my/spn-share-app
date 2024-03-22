@@ -1,0 +1,51 @@
+import { Request, Response } from "express";
+import { z } from "zod";
+import { Role, UserModel } from "../models/user-model";
+
+const loginSchema = z.object({
+  email: z.string().email(),
+  password: z.string().min(6),
+});
+
+const registerSchema = z.object({
+  firstname: z.string().min(2),
+  lastname: z.string().min(2),
+  email: z.string().email(),
+  password: z.string().min(6),
+});
+
+export class AuthController {
+  constructor(private userModel: UserModel) {}
+
+  getLoginForm = async (req: Request, res: Response) => {
+    res.render("auth/login");
+  };
+
+  getRegisterForm = async (req: Request, res: Response) => {
+    res.render("auth/register");
+  };
+
+  Register = async (req: Request, res: Response) => {
+    try {
+      // Use zod to validate the request body
+      const validatedUser = registerSchema.parse(req.body);
+
+      // Add the role of DONATOR to the user
+      const userWithRole = { ...validatedUser, role: Role.DONATOR };
+
+      // Register the user
+      await this.userModel.registerUser(userWithRole);
+
+      // Redirect the user to the login page
+      res.render("auth/login", { message: "User registered successfully" });
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        // Handle zod validation errors
+        res.status(400).render("auth/register", { errors: error.errors });
+      } else {
+        // Other errors
+        res.status(500).render("auth/register", { errors: [error as Error] });
+      }
+    }
+  };
+}

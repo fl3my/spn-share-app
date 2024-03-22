@@ -1,0 +1,23 @@
+<form action="/auth/register" method="POST">
+  <label for="firstname">firstname:</label>
+  <input type="text" id="firstname" name="firstname" required />
+
+  <label for="lastname">lastname:</label>
+  <input type="text" id="lastname" name="lastname" required />
+
+  <label for="email">Email:</label>
+  <input type="email" id="email" name="email" required />
+
+  <label for="password">Password:</label>
+  <input type="password" id="password" name="password" required />
+
+  <button type="submit">Register</button>
+</form>
+
+{{#if errors}}
+  <ul>
+    {{#each errors}}
+      <li>{{this.message}}</li>
+    {{/each}}
+  </ul>
+{{/if}}
