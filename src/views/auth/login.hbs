@@ -7,3 +7,11 @@
 
   <button type="submit">Login</button>
 </form>
+
+{{#if errors}}
+  <ul>
+    {{#each errors}}
+      <li>{{this.message}}</li>
+    {{/each}}
+  </ul>
+{{/if}}

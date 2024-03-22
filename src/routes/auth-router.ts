@@ -12,7 +12,7 @@ const authController = new AuthController(userModel);
 authRouter.get("/login", authController.getLoginForm);
 
 // POST: /auth/login
-authRouter.post("/login");
+authRouter.post("/login", authController.Login);
 
 // GET: /auth/register
 authRouter.get("/register", authController.getRegisterForm);
@@ -21,6 +21,6 @@ authRouter.get("/register", authController.getRegisterForm);
 authRouter.post("/register", authController.Register);
 
 // GET: /auth/logout
-authRouter.get("/logout");
+authRouter.get("/logout", authController.Logout);
 
 export { authRouter };

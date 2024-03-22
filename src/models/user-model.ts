@@ -39,7 +39,7 @@ export class UserModel extends DataStoreModel<UserDocument> {
     return super.insert(user);
   }
 
-  private async findByEmail(email: string): Promise<UserDocument | null> {
+  async findByEmail(email: string): Promise<UserDocument | null> {
     try {
       return await this.db.findOneAsync({ email });
     } catch (error) {
@@ -49,7 +49,7 @@ export class UserModel extends DataStoreModel<UserDocument> {
   }
 
   // Function to hash the user's password
-  private async hashPassword(password: string): Promise<string> {
+  async hashPassword(password: string): Promise<string> {
     try {
       // Define the argon2 hash options
       const options = {
