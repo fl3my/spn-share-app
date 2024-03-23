@@ -85,7 +85,9 @@ export class AuthController {
       await this.userModel.registerUser(userWithRole);
 
       // Redirect the user to the login page
-      res.render("auth/login", { message: "User registered successfully" });
+      res.render("auth/login", {
+        success: { message: "User registered successfully" },
+      });
     } catch (error) {
       if (error instanceof z.ZodError) {
         // Handle zod validation errors

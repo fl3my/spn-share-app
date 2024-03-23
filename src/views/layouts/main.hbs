@@ -5,13 +5,7 @@
   </head>
   <body>
 
-    {{#if user}}
-      {{user.email}}
-    {{/if}}
-
-    <a href="/auth/login">Login</a>
-    <a href="/auth/register">Register</a>
-
+    {{> loginRegister }}
     {{{body}}}
 
   </body>
