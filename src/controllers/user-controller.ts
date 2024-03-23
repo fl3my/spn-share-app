@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from "express";
+import { Request, Response } from "express";
 import { Role, UserModel } from "../models/user-model";
 import { z } from "zod";
 
@@ -19,7 +19,6 @@ const updatedUserSchema = z.object({
 
 export class UserController {
   constructor(private userModel: UserModel) {}
-
   // Get all users
   getAllUsers = async (req: Request, res: Response) => {
     const users = await this.userModel.findAll();
@@ -95,6 +94,16 @@ export class UserController {
         });
       }
     }
+  };
+
+  getDeleteUserForm = async (req: Request, res: Response) => {
+    if (!req.params.id) {
+      return res.status(500).render("error", { error: "User ID is required" });
+    }
+    // Get the user by ID
+    const user = await this.userModel.findById(req.params.id);
+
+    res.render("users/delete", { user });
   };
 
   // Delete a user

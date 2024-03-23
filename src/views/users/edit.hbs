@@ -1,19 +1,32 @@
 <form action="/users/{{user._id}}?_method=PATCH" method="post">
-    <label for="firstname">First Name:</label><br>
-    <input type="text" id="firstname" name="firstname" value="{{user.firstname}}" required minlength="2"><br>
-    
-    <label for="lastname">Last Name:</label><br>
-    <input type="text" id="lastname" name="lastname" value="{{user.lastname}}" required minlength="2"><br>
-    
-    <label for="role">Role:</label><br>
-    <select id="role" name="role">
-        <option value="DONATOR" {{#if (eq user.role 'DONATOR')}}selected{{/if}}>Donator</option>
-        <option value="PANTRY" {{#if (eq user.role 'PANTRY')}}selected{{/if}}>Pantry</option>
-        <option value="ADMIN" {{#if (eq user.role 'ADMIN')}}selected{{/if}}>Admin</option>
-    </select><br>
-    
-    <label for="email">Email:</label><br>
-    <input type="email" id="email" name="email" value="{{user.email}}" required><br>
+  <label for="firstname" class="form-label">First Name</label><br />
+  <input
+    type="text"
+    class="form-control"
+    id="firstname"
+    name="firstname"
+    required
+    minlength="2"
+  />
 
-    <input type="submit" value="Update">
+  <label for="lastname" class="form-label">Last Name</label><br />
+  <input
+    type="text"
+    class="form-control"
+    id="lastname"
+    name="lastname"
+    required
+    minlength="2"
+  />
+
+  <label for="role" class="form-label">Role</label><br />
+  <select id="role" class="form-select" name="role">
+    <option value="DONATOR">Donator</option>
+    <option value="PANTRY">Pantry</option>
+    <option value="ADMIN">Admin</option>
+  </select>
+
+  <label for="email" class="form-label">Email</label><br />
+  <input type="email" class="form-control" id="email" name="email" required />
+  <input type="submit" value="Update" class="btn btn-primary" />
 </form>

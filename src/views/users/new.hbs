@@ -1,43 +1,53 @@
 <form action="/users" method="post">
-  <label for="firstname">First Name:</label><br />
+  <label for="firstname" class="form-label">First Name</label><br />
   <input
     type="text"
+    class="form-control"
     id="firstname"
     name="firstname"
     required
     minlength="2"
-  /><br />
-
-  <label for="lastname">Last Name:</label><br />
-  <input type="text" id="lastname" name="lastname" required minlength="2" /><br
   />
 
-  <label for="role">Role:</label><br />
-  <select id="role" name="role">
+  <label for="lastname" class="form-label">Last Name</label><br />
+  <input
+    type="text"
+    class="form-control"
+    id="lastname"
+    name="lastname"
+    required
+    minlength="2"
+  />
+
+  <label for="role" class="form-label">Role</label><br />
+  <select id="role" class="form-select" name="role">
     <option value="DONATOR">Donator</option>
     <option value="PANTRY">Pantry</option>
     <option value="ADMIN">Admin</option>
-  </select><br />
+  </select>
 
-  <label for="email">Email:</label><br />
-  <input type="email" id="email" name="email" required /><br />
+  <label for="email" class="form-label">Email</label><br />
+  <input type="email" class="form-control" id="email" name="email" required />
 
-  <label for="password">Password:</label><br />
+  <label for="password" class="form-label">Password</label><br />
   <input
     type="password"
+    class="form-control"
     id="password"
     name="password"
     required
     minlength="6"
-  /><br />
+  />
 
-  <input type="submit" value="Submit" />
+  <input type="submit" value="Submit" class="btn btn-primary" />
 </form>
 
 {{#if errors}}
   <ul>
     {{#each errors}}
-      <li>{{this.message}}</li>
+      <div class="alert alert-danger" role="alert">
+        {{this.message}}
+      </div>
     {{/each}}
   </ul>
 {{/if}}

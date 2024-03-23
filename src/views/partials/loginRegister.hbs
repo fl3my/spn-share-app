@@ -1,8 +1,24 @@
 {{#if currentUser}}
-  Welcome,
-  {{currentUser.email}}!
-  <a href="/auth/logout">Logout</a>
+  <li class="nav-item dropdown">
+    <a
+      class="nav-link dropdown-toggle"
+      href="#"
+      role="button"
+      data-bs-toggle="dropdown"
+      aria-expanded="false"
+    >
+      {{currentUser.email}}
+    </a>
+    <ul class="dropdown-menu">
+      <li><a class="dropdown-item" href="/auth/profile">Profile</a></li>
+      <li><a class="dropdown-item" href="/auth/logout">Logout</a></li>
+    </ul>
+  </li>
 {{else}}
-  <a href="/auth/login">Login</a>
-  <a href="/auth/register">Register</a>
+  <li class="nav-item">
+    <a class="nav-link" href="/auth/login">Login</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="/auth/register">Register</a>
+  </li>
 {{/if}}

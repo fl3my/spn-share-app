@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { z } from "zod";
 import { Role, UserModel } from "../models/user-model";
-import passport from "passport";
+import passport from "../passport-config";
 
 const loginSchema = z.object({
   email: z.string().email(),

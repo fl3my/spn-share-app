@@ -23,6 +23,9 @@ userRouter.get("/:id/edit", userController.getEditUserForm);
 // PATCH: /users/:id
 userRouter.patch("/:id", userController.updateUser);
 
+// GET: /users/:id/delete
+userRouter.get("/:id/delete", userController.getDeleteUserForm);
+
 // DELETE: /users/:id/delete
 userRouter.delete("/:id", userController.deleteUser);
 

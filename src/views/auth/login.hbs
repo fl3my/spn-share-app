@@ -3,19 +3,28 @@
 {{/if}}
 
 <form action="/auth/login" method="POST">
-  <label for="email">Email:</label>
-  <input type="email" id="email" name="email" required />
+  <label for="email" class="form-label">Email</label>
+  <input type="text" class="form-control" id="email" name="email" required />
 
-  <label for="password">Password:</label>
-  <input type="password" id="password" name="password" required />
+  <label for="password" class="form-label">Password</label>
+  <input
+    type="password"
+    class="form-control"
+    id="password"
+    name="password"
+    minlength="4"
+    required
+  />
 
-  <button type="submit">Login</button>
+  <button type="submit" class="btn btn-primary">Login</button>
 </form>
 
 {{#if errors}}
   <ul>
     {{#each errors}}
-      <li>{{this.message}}</li>
+      <div class="alert alert-danger" role="alert">
+        {{this.message}}
+      </div>
     {{/each}}
   </ul>
 {{/if}}
