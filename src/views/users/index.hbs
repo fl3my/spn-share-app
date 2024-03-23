@@ -1,0 +1,29 @@
+{{#if users}}
+  <table>
+    <thead>
+      <tr>
+        <th>Email</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each users}}
+        <tr>
+          <td>{{this.email}}</td>
+          <td>
+            <a href="/users/{{this._id}}/edit">Edit</a>
+            <form
+              action="/users/{{this._id}}?_method=DELETE"
+              method="POST"
+            >
+              <button type="submit">Delete</a>
+            </form>
+          </td>
+        </tr>
+      {{/each}}
+    </tbody>
+  </table>
+{{else}}
+  <p>No users found</p>
+{{/if}}
+<a href="users/new">Create a new user</a>

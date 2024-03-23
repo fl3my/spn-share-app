@@ -1,0 +1,43 @@
+<form action="/users" method="post">
+  <label for="firstname">First Name:</label><br />
+  <input
+    type="text"
+    id="firstname"
+    name="firstname"
+    required
+    minlength="2"
+  /><br />
+
+  <label for="lastname">Last Name:</label><br />
+  <input type="text" id="lastname" name="lastname" required minlength="2" /><br
+  />
+
+  <label for="role">Role:</label><br />
+  <select id="role" name="role">
+    <option value="DONATOR">Donator</option>
+    <option value="PANTRY">Pantry</option>
+    <option value="ADMIN">Admin</option>
+  </select><br />
+
+  <label for="email">Email:</label><br />
+  <input type="email" id="email" name="email" required /><br />
+
+  <label for="password">Password:</label><br />
+  <input
+    type="password"
+    id="password"
+    name="password"
+    required
+    minlength="6"
+  /><br />
+
+  <input type="submit" value="Submit" />
+</form>
+
+{{#if errors}}
+  <ul>
+    {{#each errors}}
+      <li>{{this.message}}</li>
+    {{/each}}
+  </ul>
+{{/if}}

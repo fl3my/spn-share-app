@@ -1,6 +1,6 @@
-{{#if user}}
+{{#if currentUser}}
   Welcome,
-  {{user.email}}!
+  {{currentUser.email}}!
   <a href="/auth/logout">Logout</a>
 {{else}}
   <a href="/auth/login">Login</a>

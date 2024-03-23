@@ -1,0 +1,19 @@
+<form action="/users/{{user._id}}?_method=PATCH" method="post">
+    <label for="firstname">First Name:</label><br>
+    <input type="text" id="firstname" name="firstname" value="{{user.firstname}}" required minlength="2"><br>
+    
+    <label for="lastname">Last Name:</label><br>
+    <input type="text" id="lastname" name="lastname" value="{{user.lastname}}" required minlength="2"><br>
+    
+    <label for="role">Role:</label><br>
+    <select id="role" name="role">
+        <option value="DONATOR" {{#if (eq user.role 'DONATOR')}}selected{{/if}}>Donator</option>
+        <option value="PANTRY" {{#if (eq user.role 'PANTRY')}}selected{{/if}}>Pantry</option>
+        <option value="ADMIN" {{#if (eq user.role 'ADMIN')}}selected{{/if}}>Admin</option>
+    </select><br>
+    
+    <label for="email">Email:</label><br>
+    <input type="email" id="email" name="email" value="{{user.email}}" required><br>
+
+    <input type="submit" value="Update">
+</form>
