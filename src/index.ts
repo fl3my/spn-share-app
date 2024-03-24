@@ -9,6 +9,7 @@ import methodOverride from "method-override";
 
 import { authRouter } from "./routes/auth-router";
 import { userRouter } from "./routes/user-router";
+import { ensureAdmin, ensureInRole } from "./middleware/auth-middleware";
 
 // configure environment variables
 dotenv.config();
@@ -66,7 +67,7 @@ app.set("views", "src/views");
 
 // Define the routes
 app.use("/auth", authRouter);
-app.use("/users", userRouter);
+app.use("/users", ensureAdmin, userRouter);
 
 app.get("/", (req, res) => {
   res.render("home");

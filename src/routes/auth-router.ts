@@ -23,4 +23,7 @@ authRouter.post("/register", authController.Register);
 // GET: /auth/logout
 authRouter.get("/logout", authController.Logout);
 
+// Get: /auth/unauthorized
+authRouter.get("/unauthorized", authController.Unauthorized);
+
 export { authRouter };

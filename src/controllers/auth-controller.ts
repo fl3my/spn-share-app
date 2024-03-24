@@ -107,4 +107,8 @@ export class AuthController {
       res.redirect("/auth/login");
     });
   };
+
+  Unauthorized = async (req: Request, res: Response) => {
+    res.status(403).render("auth/unauthorized");
+  };
 }

@@ -31,5 +31,4 @@ userRouter.delete("/:id", userController.deleteUser);
 
 // Get: /users/:id
 userRouter.get("/:id", userController.getUser);
-
 export { userRouter };
