@@ -1,4 +1,6 @@
 import { Request, Response } from "express";
+import fs from "fs";
+import path from "path";
 import { DonationItemModel } from "../models/donation-item-model";
 import { z } from "zod";
 import {
@@ -82,8 +84,21 @@ export class DonationItemController {
       // Validate the request body
       const newDonationItem = donationItemSchema.parse(req.body);
 
+      // Check if the image file is provided
+      if (!req.file) {
+        throw new Error("Image file is required");
+      }
+
+      // Create a new donation item document with missing fields
+      const donationItemDocument = {
+        ...newDonationItem,
+        userId: user.id,
+        dateCreated: new Date(),
+        imageFilename: req.file.filename,
+      };
+
       // Insert the new donation item
-      await this.donationItemModel.createDonationItem(user.id, newDonationItem);
+      await this.donationItemModel.insert(donationItemDocument);
 
       // Redirect to the donation items page
       res.redirect("/donation-items");
@@ -111,6 +126,7 @@ export class DonationItemController {
     if (!req.params.id) {
       return res.json({ error: "Donation Item ID is required" });
     }
+
     // Get the donation item by ID
     const donationItem = await this.donationItemModel.findById(req.params.id);
 
@@ -171,7 +187,14 @@ export class DonationItemController {
         throw new Error("Donation Item ID is required");
       }
       // Delete the donation item by ID
-      await this.donationItemModel.remove(req.params.id);
+      const { imageFilename } = await this.donationItemModel.remove(
+        req.params.id
+      );
+
+      // Delete the image file
+      fs.unlinkSync(
+        path.join(__dirname, "..", "..", "public", "uploads", imageFilename)
+      );
 
       res.redirect("/donation-items");
     } catch (error) {

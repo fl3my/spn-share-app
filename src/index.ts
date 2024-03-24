@@ -25,6 +25,9 @@ const port = process.env.PORT || 3000;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Serve static files from the public directory
+app.use(express.static("public"));
+
 // Use method override middleware to support PUT and DELETE requests
 app.use(methodOverride("_method"));
 

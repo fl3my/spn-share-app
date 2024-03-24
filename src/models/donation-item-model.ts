@@ -28,28 +28,13 @@ interface DonationItemDocument extends Document {
   dateCreated?: Date;
   measurement: Measurement;
   dateInfo: DateInfo;
+  imageFilename: string;
 }
 
 // This is the donation item model class that extends the base document model
 export class DonationItemModel extends DocumentModel<DonationItemDocument> {
   constructor(db: DataStore<DonationItemDocument>) {
     super(db);
-  }
-
-  // Create a new donation item
-  async createDonationItem(
-    userId: string,
-    donationItem: DonationItemDocument
-  ): Promise<DonationItemDocument> {
-    // Add the hidden properties to the donation item
-    const donationItemDocument: DonationItemDocument = {
-      ...donationItem,
-      userId: userId,
-      dateCreated: new Date(),
-    };
-
-    // Insert the donation item into the database using the base class insert method
-    return super.insert(donationItemDocument);
   }
 
   // Find all donation items by user ID

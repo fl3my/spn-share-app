@@ -64,13 +64,21 @@ export class DocumentModel<T extends Document> {
   }
 
   // Remove a document from the collection
-  async remove(id: string): Promise<boolean> {
+  async remove(id: string): Promise<T> {
     try {
+      // Find the document by id
+      const document = await this.findById(id);
+
+      // Throw an error if the document is not found
+      if (!document) {
+        throw new Error(`Document with id ${id} not found`);
+      }
+
       // Remove the document and return amount of removed documents
       const numRemoved = await this.db.removeAsync({ _id: id }, {});
 
       // Return true if a document was removed
-      return numRemoved > 0;
+      return document;
     } catch (error) {
       console.error(`Error removing document with id ${id}:`, error);
       throw error;
