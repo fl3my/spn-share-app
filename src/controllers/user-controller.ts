@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
-import { Role, UserModel } from "../models/user-model";
+import { UserModel } from "../models/user-model";
+import { Role } from "../models/enums";
 import { z } from "zod";
 
 const newUserSchema = z.object({

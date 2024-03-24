@@ -1,0 +1,113 @@
+<form action="/donation-items/{{donationItem._id}}?_method=PATCH" method="POST">
+  <div class="mb-3">
+    <label for="name" class="form-label">Name</label>
+    <input
+      type="text"
+      class="form-control"
+      id="name"
+      name="name"
+      value="{{donationItem.name}}"
+      required
+    />
+  </div>
+
+  <div class="mb-3">
+    <label for="description" class="form-label">Description</label>
+    <textarea
+      class="form-control"
+      id="description"
+      name="description"
+      required
+    >{{donationItem.description}}</textarea>
+  </div>
+
+  <div class="mb-3">
+    <label for="category" class="form-label">Category</label>
+    <select class="form-select" id="category" name="category" required>
+      {{#each formOptions.categoryOptions}}
+        <option value="{{this}}" {{#if (eq this ../donationItem.category)}}selected{{/if}}>{{this}}</option>
+      {{/each}}
+    </select>
+  </div>
+
+  <div class="mb-3">
+    <label for="storageRequirement" class="form-label">Storage Requirement</label>
+    <select
+      class="form-select"
+      id="storageRequirement"
+      name="storageRequirement"
+      required
+    >
+      {{#each formOptions.storageOptions}}
+        <option value="{{this}}" {{#if (eq this ../donationItem.storageRequirement)}}selected{{/if}}>{{this}}</option>
+      {{/each}}
+    </select>
+  </div>
+
+  <div class="row">
+    <div class="col-md-6 mb-3">
+      <label for="measurementValue" class="form-label">Measurement Value</label>
+      <input
+        type="number"
+        class="form-control"
+        id="measurementValue"
+        name="measurement[value]"
+        value="{{donationItem.measurement.value}}"
+        required
+      />
+    </div>
+    <div class="col-md-6 mb-3">
+      <label for="measurementType" class="form-label">Measurement Type</label>
+      <select
+        class="form-select"
+        id="measurementType"
+        name="measurement[type]"
+        required
+      >
+        {{#each formOptions.measurementOptions}}
+          <option value="{{this}}" {{#if (eq this ../donationItem.measurement.type)}}selected{{/if}}>{{this}}</option>
+        {{/each}}
+      </select>
+    </div>
+  </div>
+
+  <div class="row">
+
+    <div class="col-md-6 mb-3">
+      <label for="date" class="form-label">Date</label>
+      <input
+        type="date"
+        class="form-control"
+        id="date"
+        name="dateInfo[date]"
+        value="{{formatDate donationItem.date 'YYYY-MM-DD'}}"
+        required
+      />
+    </div>
+    <div class="col-md-6 mb-3">
+      <label for="dateType" class="form-label">Date Type</label>
+      <select
+        class="form-select"
+        id="dateType"
+        name="dateInfo[dateType]"
+        required
+      >
+        {{#each formOptions.dateOptions}}
+          <option value="{{this}}" {{#if (eq this ../donationItem.dateInfo.dateType)}}selected{{/if}}>{{this}}</option>
+        {{/each}}
+      </select>
+    </div>
+  </div>
+
+  <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+
+{{#if errors}}
+  <ul>
+    {{#each errors}}
+      <div class="alert alert-danger" role="alert">
+        {{this.message}}
+      </div>
+    {{/each}}
+  </ul>
+{{/if}}

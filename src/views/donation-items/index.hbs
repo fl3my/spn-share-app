@@ -1,0 +1,26 @@
+<h1>Your donation items</h1>
+{{#if donationItems}}
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each donationItems}}
+        <tr>
+          <td>{{this.name}}</td>
+          <td>
+            <a href="/donation-items/{{this._id}}/edit">Edit</a>
+            <a href="/donation-items/{{this._id}}">Show</a>
+            <a href="/donation-items/{{this._id}}/delete">Delete</a>
+          </td>
+        </tr>
+      {{/each}}
+    </tbody>
+  </table>
+{{else}}
+  <p>You haven't make any donation yet</p>
+{{/if}}
+<a href="/donation-items/new">Create a new donation item</a>

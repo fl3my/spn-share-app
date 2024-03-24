@@ -1,5 +1,6 @@
-import { UserModel } from "./user-model";
 import DataStore from "@seald-io/nedb";
+import { DonationItemModel } from "./donation-item-model";
+import { UserModel } from "./user-model";
 
 /**
  * Model Provider class that holds all the models in the application.
@@ -7,14 +8,25 @@ import DataStore from "@seald-io/nedb";
  */
 class ModelProvider {
   private userModel: UserModel;
+  private donationItemModel: DonationItemModel;
 
   constructor() {
     const userDb = new DataStore({ filename: "data/users.db", autoload: true });
     this.userModel = new UserModel(userDb);
+
+    const donationItemDb = new DataStore({
+      filename: "data/donation-items.db",
+      autoload: true,
+    });
+    this.donationItemModel = new DonationItemModel(donationItemDb);
   }
 
   public getUserModel(): UserModel {
     return this.userModel;
+  }
+
+  public getDonationItemModel(): DonationItemModel {
+    return this.donationItemModel;
   }
 }
 

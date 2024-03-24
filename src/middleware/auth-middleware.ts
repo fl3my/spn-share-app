@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { Role } from "../models/user-model";
+import { Role } from "../models/enums";
 
 // Ensure that the user is authenticated
 export const ensureAuthenticated = (

@@ -1,0 +1,200 @@
+import { Request, Response } from "express";
+import { DonationItemModel } from "../models/donation-item-model";
+import { z } from "zod";
+import {
+  Category,
+  DateType,
+  MeasurementType,
+  StorageRequirement,
+} from "../models/enums";
+
+const measurementSchema = z.object({
+  type: z.nativeEnum(MeasurementType),
+  value: z.coerce.number(),
+});
+
+const dateInfoSchema = z.object({
+  dateType: z.nativeEnum(DateType),
+  date: z.coerce.date(),
+});
+
+const donationItemSchema = z.object({
+  name: z.string(),
+  description: z.string(),
+  storageRequirement: z.nativeEnum(StorageRequirement),
+  category: z.nativeEnum(Category),
+  measurement: measurementSchema,
+  dateInfo: dateInfoSchema,
+});
+
+// Define a list of options for the form
+const formOptions = {
+  storageOptions: Object.values(StorageRequirement),
+  categoryOptions: Object.values(Category),
+  measurementOptions: Object.values(MeasurementType),
+  dateOptions: Object.values(DateType),
+};
+
+export class DonationItemController {
+  constructor(private donationItemModel: DonationItemModel) {}
+
+  // Get all donation items
+  getAllDonationItems = async (req: Request, res: Response) => {
+    const donationItems = await this.donationItemModel.findAll();
+    res.render("donation-items/index", { donationItems });
+  };
+
+  // Get all user donation items
+  getAllUserDonationItems = async (req: Request, res: Response) => {
+    try {
+      // Get the user ID from the request
+      const user = req.user;
+
+      // Check if the user ID is provided
+      if (!user) {
+        throw new Error("No user ID found in request");
+      }
+
+      const userDonationItems =
+        await this.donationItemModel.findDonationItemsByUserId(user.id);
+      res.render("donation-items/index", { userDonationItems });
+    } catch (error) {
+      res.status(500).render("error", { error: error });
+    }
+  };
+
+  // Get the form to create a new donation item
+  getNewDonationItemForm = async (req: Request, res: Response) => {
+    res.render("donation-items/new", { formOptions });
+  };
+
+  // Create a new donation item
+  createDonationItem = async (req: Request, res: Response) => {
+    try {
+      //Get the user ID from the request
+      const user = req.user;
+
+      // Check if the user ID is provided
+      if (!user) {
+        throw new Error("No user ID found in request");
+      }
+
+      // Validate the request body
+      const newDonationItem = donationItemSchema.parse(req.body);
+
+      // Insert the new donation item
+      await this.donationItemModel.createDonationItem(user.id, newDonationItem);
+
+      // Redirect to the donation items page
+      res.redirect("/donation-items");
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        // Handle zod validation errors
+        res.status(400).render("donation-items/new", {
+          errors: error.errors,
+          donationItem: req.body,
+          formOptions,
+        });
+      } else {
+        // Other errors
+        res.status(500).render("donation-items/new", {
+          errors: [error as Error],
+          donationItem: req.body,
+          formOptions,
+        });
+      }
+    }
+  };
+
+  // Get the form to edit a donation item
+  getEditDonationItemForm = async (req: Request, res: Response) => {
+    if (!req.params.id) {
+      return res.json({ error: "Donation Item ID is required" });
+    }
+    // Get the donation item by ID
+    const donationItem = await this.donationItemModel.findById(req.params.id);
+
+    res.render("donation-items/edit", { donationItem, formOptions });
+  };
+
+  // Update a donation item
+  updateDonationItem = async (req: Request, res: Response) => {
+    try {
+      // Check if the donation item ID is provided
+      if (!req.params.id) {
+        throw new Error("Donation Item ID is required");
+      }
+
+      // Validate the request body
+      const updatedDonationItem = donationItemSchema.parse(req.body);
+
+      // Update the donation item
+      await this.donationItemModel.update(req.params.id, updatedDonationItem);
+
+      // Redirect to the donation items page
+      res.redirect("/donation-items");
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        // Handle zod validation errors
+        res.status(400).render("donation-items/edit", {
+          errors: error.errors,
+          donationItem: req.body,
+          formOptions,
+        });
+      } else {
+        // Other errors
+        res.status(500).render("donation-items/edit", {
+          errors: [error as Error],
+          donationItem: req.body,
+          formOptions,
+        });
+      }
+    }
+  };
+
+  getDeleteDonationItemForm = async (req: Request, res: Response) => {
+    if (!req.params.id) {
+      return res
+        .status(500)
+        .render("error", { error: "Donation Item ID is required" });
+    }
+    // Get the donation item by ID
+    const donationItem = await this.donationItemModel.findById(req.params.id);
+
+    res.render("donation-items/delete", { donationItem });
+  };
+
+  // Delete a donation item
+  deleteDonationItem = async (req: Request, res: Response) => {
+    try {
+      if (!req.params.id) {
+        throw new Error("Donation Item ID is required");
+      }
+      // Delete the donation item by ID
+      await this.donationItemModel.remove(req.params.id);
+
+      res.redirect("/donation-items");
+    } catch (error) {
+      res.status(500).render("error", { error: error });
+    }
+  };
+
+  // Get a donation item
+  getDonationItem = async (req: Request, res: Response) => {
+    try {
+      if (!req.params.id) {
+        throw new Error("Donation Item ID is required");
+      }
+      // Get the donation item by ID
+      const donationItem = await this.donationItemModel.findById(req.params.id);
+
+      if (!donationItem) {
+        throw new Error("Donation Item not found");
+      }
+
+      res.render("donation-items/show", { donationItem });
+    } catch (error) {
+      res.status(500).render("error", { error: error });
+    }
+  };
+}

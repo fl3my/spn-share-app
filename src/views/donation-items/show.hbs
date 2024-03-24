@@ -1,0 +1,16 @@
+<h1>Donation Item Detail</h1>
+
+<p>User ID: {{donationItem.userId}}</p>
+<p>Name: {{donationItem.name}}</p>
+<p>Description: {{donationItem.description}}</p>
+<p>Storage Requirement: {{donationItem.storageRequirement}}</p>
+<p>Category: {{donationItem.category}}</p>
+<p>Date Created: {{donationItem.dateCreated}}</p>
+<p>Measurement:
+  {{donationItem.measurement.value}}
+  {{donationItem.measurement.type}}</p>
+<p>Date Info:
+  {{formatDate donationItem.dateInfo.date "YYYY-MM-DD"}}
+  {{donationItem.dateInfo.dateType}}</p>
+
+<a href="/donation-items/{{donationItem._id}}/edit">Edit donation item</a>

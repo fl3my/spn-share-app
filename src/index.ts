@@ -2,18 +2,20 @@ import express from "express";
 import dotenv from "dotenv";
 import morgan from "morgan";
 import { engine } from "express-handlebars";
-import passport from "./passport-config";
 import session from "express-session";
 import makeStore from "nedb-promises-session-store";
 import methodOverride from "method-override";
-
-import { authRouter } from "./routes/auth-router";
-import { userRouter } from "./routes/user-router";
-import { ensureAdmin, ensureInRole } from "./middleware/auth-middleware";
-import { homeRouter } from "./routes/home-router";
+import moment from "moment";
 
 // configure environment variables
 dotenv.config();
+
+import passport from "./passport-config";
+import { authRouter } from "./routes/auth-router";
+import { userRouter } from "./routes/user-router";
+import { ensureAdmin, ensureAuthenticated } from "./middleware/auth-middleware";
+import { homeRouter } from "./routes/home-router";
+import { donationItemRouter } from "./routes/donation-item-router";
 
 // Create an express application
 const app = express();
@@ -58,6 +60,9 @@ app.engine(
       eq: function (v1: string, v2: string): boolean {
         return v1 === v2;
       },
+      formatDate: function (date: Date, format: string) {
+        return moment(date).format(format);
+      },
     },
   })
 );
@@ -70,6 +75,7 @@ app.set("views", "src/views");
 app.use("/", homeRouter);
 app.use("/auth", authRouter);
 app.use("/users", ensureAdmin, userRouter);
+app.use("/donation-items", ensureAuthenticated, donationItemRouter);
 
 app.get("/", (req, res) => {
   res.render("home");

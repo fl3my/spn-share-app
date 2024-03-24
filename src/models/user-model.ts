@@ -1,13 +1,7 @@
 import argon2 from "argon2";
 import { DocumentModel, Document } from "./document-model";
 import DataStore from "@seald-io/nedb";
-
-// Define the roles that a user can have
-export enum Role {
-  DONATOR = "DONATOR",
-  PANTRY = "PANTRY",
-  ADMIN = "ADMIN",
-}
+import { Role } from "./enums";
 
 // Define an inteface for the user document object
 interface UserDocument extends Document {

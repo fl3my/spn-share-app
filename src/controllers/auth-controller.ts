@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { z } from "zod";
-import { Role, UserModel } from "../models/user-model";
+import { UserModel } from "../models/user-model";
+import { Role } from "../models/enums";
 import passport from "../passport-config";
 
 const loginSchema = z.object({
