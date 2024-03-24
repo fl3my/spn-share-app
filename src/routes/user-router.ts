@@ -1,11 +1,11 @@
 import express from "express";
 import { UserController } from "../controllers/user-controller";
-import { UserModel } from "../models/user-model";
+import { modelProvider } from "../models/model-provider";
 
 // Create a new router to handle /user routes
 const userRouter = express.Router();
 
-const userModel = new UserModel();
+const userModel = modelProvider.getUserModel();
 const userController = new UserController(userModel);
 
 // GET: /users

@@ -1,22 +1,17 @@
-import Datastore from "@seald-io/nedb";
+import DataStore from "@seald-io/nedb";
 
 // Define an inteface for the document object
 export interface Document {
   _id?: string;
 }
 
-// This is the base data store model class that will be extended by all other models
-export class DataStoreModel<T extends Document> {
-  protected db: Datastore<T>;
+// This is the base document model class that will be extended by all other models
+export class DocumentModel<T extends Document> {
+  protected db: DataStore<T>;
 
-  // The constructor takes the collection name and a boolean to determine if the database is in test mode
-  constructor(collectionName: string, isTest: boolean = false) {
-    // If the database is in test mode, an in memory database is created
-    this.db = new Datastore<T>({
-      filename: isTest ? undefined : `./data/${collectionName}.db`,
-      autoload: true,
-      inMemoryOnly: isTest,
-    });
+  // The constructor takes in an instance of the datastore
+  constructor(db: DataStore<T>) {
+    this.db = db;
   }
 
   // Find all documents in the collection

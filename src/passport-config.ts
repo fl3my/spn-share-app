@@ -1,10 +1,10 @@
 import passport from "passport";
 import { Strategy as LocalStrategy } from "passport-local";
 
-import { UserModel } from "./models/user-model";
+import { modelProvider } from "./models/model-provider";
 
-// Create a new user model
-const userModel = new UserModel();
+// Get the user model instance
+const userModel = modelProvider.getUserModel();
 
 // Create a local strategy
 passport.use(

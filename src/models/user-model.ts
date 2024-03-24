@@ -1,5 +1,6 @@
 import argon2 from "argon2";
-import { DataStoreModel, Document } from "./data-store-model";
+import { DocumentModel, Document } from "./document-model";
+import DataStore from "@seald-io/nedb";
 
 // Define the roles that a user can have
 export enum Role {
@@ -17,10 +18,10 @@ interface UserDocument extends Document {
   role: Role;
 }
 
-// This is the user model class that extends the base data store model
-export class UserModel extends DataStoreModel<UserDocument> {
-  constructor(isTest: boolean = false) {
-    super("users", isTest);
+// This is the user model class that extends the base document model
+export class UserModel extends DocumentModel<UserDocument> {
+  constructor(db: DataStore<UserDocument>) {
+    super(db);
   }
 
   async registerUser(user: UserDocument): Promise<UserDocument> {

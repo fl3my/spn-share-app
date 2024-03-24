@@ -26,7 +26,7 @@ export class AuthController {
     try {
       // Use zod to validate the request body
       loginSchema.parse(req.body);
-
+      console.log(req.body);
       passport.authenticate(
         "local",
         (err: Error | null, user: Express.User | false) => {

@@ -1,11 +1,11 @@
 import express from "express";
 import { AuthController } from "../controllers/auth-controller";
-import { UserModel } from "../models/user-model";
+import { modelProvider } from "../models/model-provider";
 
 // Create a new router to handle /auth routes
 const authRouter = express.Router();
 
-const userModel = new UserModel();
+const userModel = modelProvider.getUserModel();
 const authController = new AuthController(userModel);
 
 // GET: /auth/login
