@@ -131,3 +131,6 @@ dist
 
 # Nedb files
 data
+
+# Contents of uploads directory
+uploads

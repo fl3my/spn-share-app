@@ -23,11 +23,31 @@ const dateInfoSchema = z
     (data) => {
       const currentDate = new Date();
 
-      // Use by and Best before dates cannot be in the past
+      // Set to start of date
+      currentDate.setHours(0, 0, 0, 0);
+
+      // Use by dates cannot be in the past
+      if (data.dateType === DateType.USE_BY && data.date < currentDate) {
+        return false;
+      }
+
+      return true;
+    },
+    {
+      message: "'Use by' dates cannot be in the past.",
+    }
+  )
+  .refine(
+    (data) => {
+      // Set date 7 days before
+      const bestBeforeDate = new Date();
+      bestBeforeDate.setHours(0, 0, 0, 0);
+      bestBeforeDate.setDate(bestBeforeDate.getDate() - 7);
+
+      // Best before dates must be from 7 days before onwards
       if (
-        (data.dateType === DateType.USE_BY ||
-          data.dateType === DateType.BEST_BEFORE) &&
-        data.date < currentDate
+        data.dateType === DateType.BEST_BEFORE &&
+        data.date < bestBeforeDate
       ) {
         return false;
       }
@@ -35,12 +55,15 @@ const dateInfoSchema = z
       return true;
     },
     {
-      message: "'Use by' and 'Best before' dates cannot be in the past.",
+      message: "'Best before' dates cannot be more than 7 days old.",
     }
   )
   .refine(
     (data) => {
       const currentDate = new Date();
+
+      // Set to start of day
+      currentDate.setHours(0, 0, 0, 0);
 
       // Production date cannot be in the future
       if (

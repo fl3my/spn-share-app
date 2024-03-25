@@ -48,4 +48,48 @@ export class DonationItemModel extends DocumentModel<DonationItemDocument> {
       throw error;
     }
   }
+
+  async findNotOutOfDate(
+    daysAfterBestBefore: number,
+    daysAfterProduction: number
+  ): Promise<DonationItemDocument[]> {
+    try {
+      // Get the current date
+      const now = new Date();
+
+      // Set the time to midnight
+      now.setHours(0, 0, 0, 0);
+
+      // Calculate the best before date based on the days after best before
+      const bestBeforeDate = new Date(now);
+      bestBeforeDate.setDate(bestBeforeDate.getDate() - daysAfterBestBefore);
+
+      // Calculate the production date based on the days after production
+      const productionDate = new Date(now);
+      productionDate.setDate(productionDate.getDate() - daysAfterProduction);
+
+      // Find all donation items that are not out of date
+      return await this.db
+        .findAsync({
+          $or: [
+            {
+              "dateInfo.dateType": DateType.USE_BY,
+              "dateInfo.date": { $gte: now },
+            },
+            {
+              "dateInfo.dateType": DateType.BEST_BEFORE,
+              "dateInfo.date": { $gte: bestBeforeDate },
+            },
+            {
+              "dateInfo.dateType": DateType.PRODUCTION_DATE,
+              "dateInfo.date": { $gte: productionDate },
+            },
+          ],
+        })
+        .sort({ dateCreated: -1 });
+    } catch (error) {
+      console.error("Error finding donations not out of date: ", error);
+      throw error;
+    }
+  }
 }

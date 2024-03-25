@@ -16,6 +16,7 @@ import { userRouter } from "./routes/user-router";
 import { ensureAdmin, ensureAuthenticated } from "./middleware/auth-middleware";
 import { homeRouter } from "./routes/home-router";
 import { donationItemRouter } from "./routes/donation-item-router";
+import { shopRouter } from "./routes/shop-router";
 
 // Create an express application
 const app = express();
@@ -79,6 +80,7 @@ app.use("/", homeRouter);
 app.use("/auth", authRouter);
 app.use("/users", ensureAdmin, userRouter);
 app.use("/donation-items", ensureAuthenticated, donationItemRouter);
+app.use("/shop", ensureAuthenticated, shopRouter);
 
 app.get("/", (req, res) => {
   res.render("home");

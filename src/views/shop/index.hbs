@@ -1,0 +1,48 @@
+<h1>Donated items</h1>
+
+<form action="/shop" method="get" class="d-flex mb-3">
+  <div class="me-3">
+    <label for="daysAfterBestBefore" class="form-label">Days after best before</label>
+    <input
+      type="number"
+      name="daysAfterBestBefore"
+      value="{{query.daysAfterBestBefore}}"
+      class="form-control"
+    />
+  </div>
+
+  <div class="me-3">
+    <label for="daysAfterProduction" class="form-label">Days after production</label>
+    <input
+      type="number"
+      name="daysAfterProduction"
+      value="{{query.daysAfterProduction}}"
+      class="form-control"
+    />
+  </div>
+
+  <button type="submit" class="btn btn-primary align-self-end">Update</button>
+</form>
+
+{{#if shopItems}}
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each shopItems}}
+        <tr>
+          <td>{{this.name}}</td>
+          <td>
+            <a href="/shop/{{this._id}}">Show</a>
+          </td>
+        </tr>
+      {{/each}}
+    </tbody>
+  </table>
+{{else}}
+  <p>Sorry, no donations available!</p>
+{{/if}}
