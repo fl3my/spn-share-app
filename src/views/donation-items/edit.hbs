@@ -1,4 +1,11 @@
-<form action="/donation-items/{{donationItem._id}}?_method=PATCH" method="POST">
+<form action="/donation-items/{{donationItem._id}}?_method=PATCH" method="POST" enctype="multipart/form-data">
+<div class="mb-3">
+    <label for="image" class="form-label">Image</label>
+    <input type="file" class="form-control" id="image" name="image" accept="image/*" onchange="updatePreview(this, 'image-preview')" />
+  </div>
+  <div class="mb-3">
+    <img id="image-preview" src="/uploads/{{donationItem.imageFilename}}" alt="Image Preview" style="max-width: 200px; max-height: 200px;" />
+  </div>
   <div class="mb-3">
     <label for="name" class="form-label">Name</label>
     <input
@@ -80,7 +87,7 @@
         class="form-control"
         id="date"
         name="dateInfo[date]"
-        value="{{formatDate donationItem.date 'YYYY-MM-DD'}}"
+        value="{{formatDate donationItem.dateInfo.date 'YYYY-MM-DD'}}"
         required
       />
     </div>
@@ -111,3 +118,17 @@
     {{/each}}
   </ul>
 {{/if}}
+
+<script>
+  function updatePreview(input, target) {
+    let file = input.files[0];
+    let reader = new FileReader();
+
+    reader.readAsDataURL(file);
+    reader.onload = function () {
+        let img = document.getElementById(target);
+        // can also use "this.result"
+        img.src = reader.result;
+    }
+}
+</script>

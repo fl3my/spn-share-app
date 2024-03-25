@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import fs from "fs";
 import path from "path";
+import { v4 as uuidv4 } from "uuid";
 import { DonationItemModel } from "../models/donation-item-model";
 import { z } from "zod";
 import {
@@ -9,16 +10,55 @@ import {
   MeasurementType,
   StorageRequirement,
 } from "../models/enums";
+import { deleteImage, saveImage, updateImage } from "../utils/image-handler";
 
 const measurementSchema = z.object({
   type: z.nativeEnum(MeasurementType),
   value: z.coerce.number(),
 });
 
-const dateInfoSchema = z.object({
-  dateType: z.nativeEnum(DateType),
-  date: z.coerce.date(),
-});
+const dateInfoSchema = z
+  .object({
+    dateType: z.nativeEnum(DateType),
+    date: z.coerce.date(),
+  })
+  .refine(
+    (data) => {
+      const currentDate = new Date();
+
+      // Use by and Best before dates cannot be in the past
+      if (
+        (data.dateType === DateType.USE_BY ||
+          data.dateType === DateType.BEST_BEFORE) &&
+        data.date < currentDate
+      ) {
+        return false;
+      }
+
+      return true;
+    },
+    {
+      message: "'Use by' and 'Best before' dates cannot be in the past.",
+    }
+  )
+  .refine(
+    (data) => {
+      const currentDate = new Date();
+
+      // Production date cannot be in the future
+      if (
+        data.dateType === DateType.PRODUCTION_DATE &&
+        data.date > currentDate
+      ) {
+        return false;
+      }
+
+      return true;
+    },
+    {
+      message: "'Production date' cannot be in the future.",
+    }
+  );
 
 const donationItemSchema = z.object({
   name: z.string(),
@@ -89,12 +129,15 @@ export class DonationItemController {
         throw new Error("Image file is required");
       }
 
+      // Save the image file and get the filename
+      const filename = saveImage(req.file);
+
       // Create a new donation item document with missing fields
       const donationItemDocument = {
         ...newDonationItem,
         userId: user.id,
         dateCreated: new Date(),
-        imageFilename: req.file.filename,
+        imageFilename: filename,
       };
 
       // Insert the new donation item
@@ -135,17 +178,62 @@ export class DonationItemController {
 
   // Update a donation item
   updateDonationItem = async (req: Request, res: Response) => {
+    let imageFilename;
+    let _id = req.params.id;
+
     try {
       // Check if the donation item ID is provided
       if (!req.params.id) {
         throw new Error("Donation Item ID is required");
       }
 
+      // Get the current donation item
+      const currentDonationItem = await this.donationItemModel.findById(
+        req.params.id
+      );
+
+      if (!currentDonationItem) {
+        throw new Error("Donation Item not found");
+      }
+
+      // Set the current image filename to pass back to view
+      imageFilename = currentDonationItem.imageFilename;
+
       // Validate the request body
       const updatedDonationItem = donationItemSchema.parse(req.body);
 
-      // Update the donation item
-      await this.donationItemModel.update(req.params.id, updatedDonationItem);
+      // Check if a new image file is provided
+      if (req.file) {
+        // Get the current donation item
+        const currentDonationItem = await this.donationItemModel.findById(
+          req.params.id
+        );
+
+        if (!currentDonationItem) {
+          throw new Error("Donation Item not found");
+        }
+
+        // Delete the old image file and save the new image file
+        const newImageFilename = updateImage(
+          currentDonationItem.imageFilename,
+          req.file
+        );
+
+        // Create a new object that includes all properties of updatedDonationItem and the imageFilename property
+        const updatedDonationItemWithImage = {
+          ...updatedDonationItem,
+          imageFilename: newImageFilename,
+        };
+
+        // Update the donation item
+        await this.donationItemModel.update(
+          req.params.id,
+          updatedDonationItemWithImage
+        );
+      } else {
+        // Update the donation item
+        await this.donationItemModel.update(req.params.id, updatedDonationItem);
+      }
 
       // Redirect to the donation items page
       res.redirect("/donation-items");
@@ -154,14 +242,14 @@ export class DonationItemController {
         // Handle zod validation errors
         res.status(400).render("donation-items/edit", {
           errors: error.errors,
-          donationItem: req.body,
+          donationItem: { ...req.body, imageFilename, _id },
           formOptions,
         });
       } else {
         // Other errors
         res.status(500).render("donation-items/edit", {
           errors: [error as Error],
-          donationItem: req.body,
+          donationItem: { ...req.body, imageFilename, _id },
           formOptions,
         });
       }
@@ -191,10 +279,8 @@ export class DonationItemController {
         req.params.id
       );
 
-      // Delete the image file
-      fs.unlinkSync(
-        path.join(__dirname, "..", "..", "public", "uploads", imageFilename)
-      );
+      // Delete the image
+      deleteImage(imageFilename);
 
       res.redirect("/donation-items");
     } catch (error) {

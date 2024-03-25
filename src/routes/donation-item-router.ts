@@ -1,7 +1,5 @@
 import express from "express";
 import multer from "multer";
-import { v4 as uuidv4 } from "uuid";
-import path from "path";
 
 import { DonationItemController } from "../controllers/donation-item-controller";
 import { modelProvider } from "../models/model-provider";
@@ -9,16 +7,8 @@ import { modelProvider } from "../models/model-provider";
 // Create a new router to handle /donation-items routes
 const donationItemRouter = express.Router();
 
-// Create a new multer storage object to define random file names
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, "public/uploads/");
-  },
-  filename: function (req, file, cb) {
-    const uniqueName = uuidv4() + path.extname(file.originalname);
-    cb(null, path.basename(uniqueName));
-  },
-});
+// Use memory storage so that the image can be saved after validation
+const storage = multer.memoryStorage();
 
 // Create a new multer upload object with the storage configuration
 const upload = multer({ storage: storage });
@@ -46,7 +36,11 @@ donationItemRouter.get(
 );
 
 // PATCH: /donation-items/:id
-donationItemRouter.patch("/:id", donationItemController.updateDonationItem);
+donationItemRouter.patch(
+  "/:id",
+  upload.single("image"),
+  donationItemController.updateDonationItem
+);
 
 // GET: /donation-items/:id/delete
 donationItemRouter.get(
