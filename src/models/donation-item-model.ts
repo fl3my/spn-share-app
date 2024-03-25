@@ -51,7 +51,9 @@ export class DonationItemModel extends DocumentModel<DonationItemDocument> {
 
   async findNotOutOfDate(
     daysAfterBestBefore: number,
-    daysAfterProduction: number
+    daysAfterProduction: number,
+    category?: string,
+    searchTerm?: string
   ): Promise<DonationItemDocument[]> {
     try {
       // Get the current date
@@ -68,25 +70,37 @@ export class DonationItemModel extends DocumentModel<DonationItemDocument> {
       const productionDate = new Date(now);
       productionDate.setDate(productionDate.getDate() - daysAfterProduction);
 
-      // Find all donation items that are not out of date
-      return await this.db
-        .findAsync({
-          $or: [
-            {
-              "dateInfo.dateType": DateType.USE_BY,
-              "dateInfo.date": { $gte: now },
-            },
-            {
-              "dateInfo.dateType": DateType.BEST_BEFORE,
-              "dateInfo.date": { $gte: bestBeforeDate },
-            },
-            {
-              "dateInfo.dateType": DateType.PRODUCTION_DATE,
-              "dateInfo.date": { $gte: productionDate },
-            },
-          ],
-        })
-        .sort({ dateCreated: -1 });
+      // Create the base query
+      let query: any = {
+        $or: [
+          {
+            "dateInfo.dateType": DateType.USE_BY,
+            "dateInfo.date": { $gte: now },
+          },
+          {
+            "dateInfo.dateType": DateType.BEST_BEFORE,
+            "dateInfo.date": { $gte: bestBeforeDate },
+          },
+          {
+            "dateInfo.dateType": DateType.PRODUCTION_DATE,
+            "dateInfo.date": { $gte: productionDate },
+          },
+        ],
+      };
+
+      // If a category is provided, add it to the query
+      if (category) {
+        query.category = category;
+      }
+
+      // If search term are provided, add them to the query
+      if (searchTerm) {
+        // Use a regex to search for the name
+        query.name = { $regex: new RegExp(searchTerm, "i") };
+      }
+
+      // Find all donation items that match the query
+      return await this.db.findAsync(query).sort({ dateCreated: -1 });
     } catch (error) {
       console.error("Error finding donations not out of date: ", error);
       throw error;

@@ -1,0 +1,30 @@
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="#">{{shopItem.category}}</a></li>
+    <li
+      class="breadcrumb-item active"
+      aria-current="page"
+    >{{shopItem.name}}</li>
+  </ol>
+</nav>
+
+<div class="row">
+  <div class="col-md-6">
+    <img
+      src="/uploads/{{shopItem.imageFilename}}"
+      class="img-fluid"
+      alt="{{shopItem.name}}"
+    />
+  </div>
+  <div class="col-md-6">
+    <h2>{{shopItem.name}}</h2>
+    <p>{{shopItem.description}}</p>
+    <p>Available:
+      {{shopItem.measurement.value}}
+      {{shopItem.measurement.type}}</p>
+    <p>Date:
+      {{shopItem.dateInfo.dateType}}
+      {{formatDate shopItem.dateInfo.date "DD MM YYYY"}}</p>
+    <button class="btn btn-primary">Request</button>
+  </div>
+</div>

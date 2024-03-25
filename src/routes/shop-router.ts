@@ -8,14 +8,8 @@ const shopRouter = express.Router();
 const donationItemModel = modelProvider.getDonationItemModel();
 const shopController = new ShopController(donationItemModel);
 
-// GET: /shop?daysAfterBestBefore=daysAfterBestBefore&daysAfterProduction=daysAfterProduction
+// GET: /shop?daysAfterBestBefore=daysAfterBestBefore&daysAfterProduction=daysAfterProduction&?category=category&searchTerm=searchTerm
 shopRouter.get("/", shopController.getShopItems);
-
-// GET: /shop/category/:category
-shopRouter.get("/category/:category", shopController.getShopItemsByCategory);
-
-// GET: /shop/search?term=searchTerm
-shopRouter.get("/search", shopController.searchShopItems);
 
 // GET: /shop/:id
 shopRouter.get("/:id", shopController.getShopItemById);

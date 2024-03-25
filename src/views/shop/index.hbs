@@ -2,6 +2,24 @@
 
 <form action="/shop" method="get" class="d-flex mb-3">
   <div class="me-3">
+    <label for="searchTerm" class="form-label">Search</label>
+    <input
+      type="text"
+      name="searchTerm"
+      value="{{query.searchTerm}}"
+      class="form-control"
+    />
+  </div>
+  <div class="me-3">
+    <label for="category" class="form-label">Category</label>
+    <select class="form-select" name="category">
+      <option value="">ALL</option>
+      {{#each categoryOptions}}
+        <option value="{{this}}" {{#if (eq this ../query.category)}}selected{{/if}}>{{this}}</option>
+      {{/each}}
+    </select>
+  </div>
+  <div class="me-3">
     <label for="daysAfterBestBefore" class="form-label">Days after best before</label>
     <input
       type="number"
@@ -25,24 +43,33 @@
 </form>
 
 {{#if shopItems}}
-  <table class="table">
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      {{#each shopItems}}
-        <tr>
-          <td>{{this.name}}</td>
-          <td>
-            <a href="/shop/{{this._id}}">Show</a>
-          </td>
-        </tr>
-      {{/each}}
-    </tbody>
-  </table>
+  <div class="row">
+    {{#each shopItems}}
+      <div class="col-md-4 mb-4">
+        <div class="card">
+          <img
+            src="/uploads/{{this.imageFilename}}"
+            class="card-img-top"
+            alt="{{this.name}}"
+          />
+          <div class="card-body">
+            <h5 class="card-title">{{this.name}}</h5>
+            <p class="card-text">
+              Category:
+              {{this.category}}<br />
+              Measurement:
+              {{this.measurement.value}}
+              {{this.measurement.type}}<br />
+              Date:
+              {{this.dateInfo.dateType}}
+              {{formatDate this.dateInfo.date "DD MM YYYY"}}
+            </p>
+            <a href="/shop/{{this._id}}" class="btn btn-primary">Show</a>
+          </div>
+        </div>
+      </div>
+    {{/each}}
+  </div>
 {{else}}
   <p>Sorry, no donations available!</p>
 {{/if}}
