@@ -6,6 +6,7 @@ Coursework 2 for GCU Web App Development 2.
 
 ```mermaid
     erDiagram
+    USER ||--o{ DONATIONITEM : "creates"
     USER {
         string _id
         string email
@@ -13,5 +14,24 @@ Coursework 2 for GCU Web App Development 2.
         string firstname
         string lastname
         string role
+    }
+    DONATIONITEM ||--|| MEASUREMENT : has
+    DONATIONITEM ||--|| DATEINFO : has
+    DONATIONITEM {
+        string userId
+        string name
+        string description
+        StorageRequirement storageRequirement
+        Category category
+        date dateCreated
+        string imageFilename
+    }
+    MEASUREMENT {
+        MeasurementType type
+        number value
+    }
+    DATEINFO {
+        DateType dateType
+        date date
     }
 ```
