@@ -134,3 +134,6 @@ data
 
 # Contents of uploads directory
 uploads
+
+# Compiled scss files
+public/css
