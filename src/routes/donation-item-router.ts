@@ -11,7 +11,18 @@ const donationItemRouter = express.Router();
 const storage = multer.memoryStorage();
 
 // Create a new multer upload object with the storage configuration
-const upload = multer({ storage: storage });
+const upload = multer({
+  storage: storage,
+  limits: { fileSize: 5 * 1024 * 1024 }, // Limit file size to 5MB
+  fileFilter: function (req, file, cb) {
+    // Only allow image MIME types
+    if (!file.mimetype.match(/\/(jpg|jpeg|png|gif)$/)) {
+      cb(new Error("Only image files are allowed!"));
+    } else {
+      cb(null, true);
+    }
+  },
+});
 
 const donationItemModel = modelProvider.getDonationItemModel();
 const donationItemController = new DonationItemController(donationItemModel);
