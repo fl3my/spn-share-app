@@ -23,7 +23,7 @@ export class AuthController {
     res.render("auth/login");
   };
 
-  Login = async (req: Request, res: Response, next: NextFunction) => {
+  login = async (req: Request, res: Response, next: NextFunction) => {
     try {
       // Use zod to validate the request body
       loginSchema.parse(req.body);
@@ -74,7 +74,7 @@ export class AuthController {
     res.render("auth/register");
   };
 
-  Register = async (req: Request, res: Response) => {
+  register = async (req: Request, res: Response) => {
     try {
       // Use zod to validate the request body
       const validatedRegister = registerSchema.parse(req.body);
@@ -100,7 +100,7 @@ export class AuthController {
     }
   };
 
-  Logout = async (req: Request, res: Response) => {
+  logout = async (req: Request, res: Response) => {
     req.logout((err) => {
       if (err) {
         throw err;
@@ -109,7 +109,7 @@ export class AuthController {
     });
   };
 
-  Unauthorized = async (req: Request, res: Response) => {
+  unauthorized = async (req: Request, res: Response) => {
     res.status(403).render("auth/unauthorized");
   };
 }

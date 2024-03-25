@@ -12,18 +12,18 @@ const authController = new AuthController(userModel);
 authRouter.get("/login", authController.getLoginForm);
 
 // POST: /auth/login
-authRouter.post("/login", authController.Login);
+authRouter.post("/login", authController.login);
 
 // GET: /auth/register
 authRouter.get("/register", authController.getRegisterForm);
 
 // POST: /auth/register
-authRouter.post("/register", authController.Register);
+authRouter.post("/register", authController.register);
 
 // GET: /auth/logout
-authRouter.get("/logout", authController.Logout);
+authRouter.get("/logout", authController.logout);
 
 // Get: /auth/unauthorized
-authRouter.get("/unauthorized", authController.Unauthorized);
+authRouter.get("/unauthorized", authController.unauthorized);
 
 export { authRouter };
