@@ -66,6 +66,8 @@ export class UserController {
 
   // Update a user
   updateUser = async (req: Request, res: Response) => {
+    let _id = req.params.id;
+
     try {
       // Check if the user ID is provided
       if (!req.params.id) {
@@ -85,13 +87,13 @@ export class UserController {
         // Handle zod validation errors
         res.status(400).render("users/edit", {
           errors: error.errors,
-          user: req.body,
+          user: { ...req.body, _id },
         });
       } else {
         // Other errors
         res.status(500).render("users/edit", {
           errors: [error as Error],
-          user: req.body,
+          user: { ...req.body, _id },
         });
       }
     }
