@@ -8,6 +8,7 @@ import {
   StorageRequirement,
 } from "../models/enums";
 import { deleteImage, saveImage, updateImage } from "../utils/image-handler";
+import { RequestModel } from "../models/request-model";
 
 const measurementSchema = z.object({
   type: z.nativeEnum(MeasurementType),
@@ -98,7 +99,10 @@ const formOptions = {
 };
 
 export class DonationItemController {
-  constructor(private donationItemModel: DonationItemModel) {}
+  constructor(
+    private donationItemModel: DonationItemModel,
+    private requestModel: RequestModel
+  ) {}
 
   // Get all donation items
   getAllDonationItems = async (req: Request, res: Response) => {
@@ -117,9 +121,10 @@ export class DonationItemController {
         throw new Error("No user ID found in request");
       }
 
-      const userDonationItems =
+      const donationItems =
         await this.donationItemModel.findDonationItemsByUserId(user.id);
-      res.render("donation-items/index", { userDonationItems });
+
+      res.render("donation-items/index", { donationItems });
     } catch (error) {
       res.status(500).render("error", { error: error });
     }
@@ -322,6 +327,52 @@ export class DonationItemController {
       }
 
       res.render("donation-items/show", { donationItem });
+    } catch (error) {
+      res.status(500).render("error", { error: error });
+    }
+  };
+
+  getDonationItemRequests = async (req: Request, res: Response) => {
+    try {
+      if (!req.params.id) {
+        throw new Error("Donation Item ID is required");
+      }
+
+      const donationItemId = req.params.id;
+
+      if (!req.user) {
+        throw new Error("No user ID found");
+      }
+
+      // Get the donation item by ID
+      const requests = await this.requestModel.findRequestsByDonationItemId(
+        donationItemId
+      );
+
+      res.render("donation-items/requests", { requests });
+    } catch (error) {
+      res.status(500).render("error", { error: error });
+    }
+  };
+
+  acceptRequest = async (req: Request, res: Response) => {
+    try {
+      if (!req.params.id || !req.params.requestId) {
+        throw new Error("Donation Item ID and Request ID are required");
+      }
+
+      const donationItemId = req.params.id;
+      const requestId = req.params.requestId;
+
+      if (!req.user) {
+        throw new Error("No user ID found");
+      }
+
+      // Accept the request
+      await this.requestModel.acceptRequest(requestId);
+
+      // Redirect to the donation item requests page
+      res.redirect(`/donation-items/${donationItemId}/requests`);
     } catch (error) {
       res.status(500).render("error", { error: error });
     }

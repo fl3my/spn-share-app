@@ -25,10 +25,14 @@ const upload = multer({
 });
 
 const donationItemModel = modelProvider.getDonationItemModel();
-const donationItemController = new DonationItemController(donationItemModel);
+const requestModel = modelProvider.getRequestModel();
+const donationItemController = new DonationItemController(
+  donationItemModel,
+  requestModel
+);
 
 // GET: /donation-items
-donationItemRouter.get("/", donationItemController.getAllDonationItems);
+donationItemRouter.get("/", donationItemController.getAllUserDonationItems);
 
 // GET: /donation-items/new
 donationItemRouter.get("/new", donationItemController.getNewDonationItemForm);
@@ -61,6 +65,18 @@ donationItemRouter.get(
 
 // DELETE: /donation-items/:id/delete
 donationItemRouter.delete("/:id", donationItemController.deleteDonationItem);
+
+// GET: /donation-items/:id/requests
+donationItemRouter.get(
+  "/:id/requests",
+  donationItemController.getDonationItemRequests
+);
+
+// POST: /donation-items/:id/requests/:requestId/accept
+donationItemRouter.post(
+  "/:id/requests/:requestId/accept",
+  donationItemController.acceptRequest
+);
 
 // Get: /donation-items/:id
 donationItemRouter.get("/:id", donationItemController.getDonationItem);

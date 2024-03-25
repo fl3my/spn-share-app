@@ -46,4 +46,55 @@ export class RequestModel extends DocumentModel<RequestDocument> {
     });
     return !!existingRequest;
   }
+
+  async findRequestsByDonationItemId(
+    donationItemId: string
+  ): Promise<RequestDocument[]> {
+    try {
+      return await this.db.findAsync({ donationItemId });
+    } catch (error) {
+      console.error("Error finding requests by donation item ID: ", error);
+      throw error;
+    }
+  }
+
+  async acceptRequest(requestId: string): Promise<RequestDocument> {
+    try {
+      // Find the request by ID
+      const request = await this.db.findOneAsync({ _id: requestId });
+
+      // Check if the request exists
+      if (!request) {
+        throw new Error("Request not found");
+      }
+
+      // Check if the request is already accepted
+      if (request.status === RequestStatus.ACCEPTED) {
+        throw new Error("Request already accepted");
+      }
+
+      // Update the request status to accepted
+      request.status = RequestStatus.ACCEPTED;
+
+      // Update the request in the database
+      const updatedRequest = await super.update(requestId, request);
+
+      // Check if the request was updated
+      if (!updatedRequest) {
+        throw new Error("Error accepting request");
+      }
+
+      // Reject all other requests for the same donation item
+      await this.db.updateAsync(
+        { donationItemId: request.donationItemId, _id: { $ne: requestId } },
+        { $set: { status: RequestStatus.REJECTED } },
+        { multi: true }
+      );
+
+      return updatedRequest;
+    } catch (error) {
+      console.error("Error accepting request: ", error);
+      throw error;
+    }
+  }
 }

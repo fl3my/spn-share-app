@@ -1,0 +1,29 @@
+<h1>Requests for this item</h1>
+{{#if requests}}
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Date Requested</th>
+        <th>Status</th>
+        <th>Delivery Method</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each requests}}
+        <tr>
+          <td>{{formatDate this.dateRequested "DD MM YYYY"}}</td>
+          <td>{{this.status}}</td>
+          <td>{{this.deliveryMethod}}</td>
+          <td>
+            <form action="requests/{{this._id}}/accept" method="post">
+              <input type="submit" value="Accept" />
+            </form>
+          </td>
+        </tr>
+      {{/each}}
+    </tbody>
+  </table>
+{{else}}
+  <p>There are no requests for this item</p>
+{{/if}}
