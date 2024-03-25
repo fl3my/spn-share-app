@@ -21,7 +21,8 @@ import { requestRouter } from "./routes/request-router";
 
 // Create an express application
 const app = express();
-const port = process.env.PORT || 3000;
+const port = Number(process.env.PORT) || 3000;
+const host = process.env.HOST || "localhost";
 
 // Use express middleware to parse the request body
 app.use(express.json());
@@ -89,6 +90,6 @@ app.get("/", (req, res) => {
 });
 
 // Start the express server
-app.listen(port, () => {
-  console.log(`Server is running at http://localhost:${port}`);
+app.listen(port, host, () => {
+  console.log(`Server is running at http://${host}:${port}`);
 });

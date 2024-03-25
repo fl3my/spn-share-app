@@ -84,13 +84,6 @@ export class RequestModel extends DocumentModel<RequestDocument> {
         throw new Error("Error accepting request");
       }
 
-      // Reject all other requests for the same donation item
-      await this.db.updateAsync(
-        { donationItemId: request.donationItemId, _id: { $ne: requestId } },
-        { $set: { status: RequestStatus.REJECTED } },
-        { multi: true }
-      );
-
       return updatedRequest;
     } catch (error) {
       console.error("Error accepting request: ", error);
