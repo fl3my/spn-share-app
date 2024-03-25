@@ -34,4 +34,20 @@ Coursework 2 for GCU Web App Development 2.
         DateType dateType
         date date
     }
+    USER ||--o{ Request : "requests"
+    DONATIONITEM ||--o{ Request : "requested in"
+    Request ||--o{ Address : has
+    Request {
+        string userId
+        string donationItemId
+        date dateRequested
+        DeliveryMethod deliveryMethod
+        RequestStatus status
+    }
+    Address {
+        string street
+        string city
+        string county
+        string postcode
+    }
 ```
