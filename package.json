@@ -38,6 +38,7 @@
     "nedb-promises-session-store": "^1.0.4",
     "passport": "^0.7.0",
     "passport-local": "^1.0.0",
+    "sharp": "^0.33.3",
     "uuid": "^9.0.1",
     "zod": "^3.22.4"
   }

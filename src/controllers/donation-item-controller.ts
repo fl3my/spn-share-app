@@ -127,7 +127,7 @@ export class DonationItemController {
       }
 
       // Save the image file and get the filename
-      const filename = saveImage(req.file);
+      const filename = await saveImage(req.file);
 
       // Create a new donation item document with missing fields
       const donationItemDocument = {
@@ -211,7 +211,7 @@ export class DonationItemController {
         }
 
         // Delete the old image file and save the new image file
-        const newImageFilename = updateImage(
+        const newImageFilename = await updateImage(
           currentDonationItem.imageFilename,
           req.file
         );

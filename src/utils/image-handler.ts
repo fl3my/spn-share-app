@@ -1,8 +1,9 @@
 import fs from "fs";
 import path from "path";
 import { v4 as uuidv4 } from "uuid";
+import sharp from "sharp";
 
-export const saveImage = (file: Express.Multer.File): string => {
+export const saveImage = async (file: Express.Multer.File): Promise<string> => {
   // Generate a unique filename
   const filename = uuidv4() + path.extname(file.originalname);
 
@@ -24,8 +25,13 @@ export const saveImage = (file: Express.Multer.File): string => {
     filename
   );
 
+  // Resize the image to 640x640 pixels
+  const buffer = await sharp(file.buffer)
+    .resize(640, 640, { fit: "cover", withoutEnlargement: true })
+    .toBuffer();
+
   // Write the image in the buffer to the uploads directory
-  fs.writeFileSync(filePath, file.buffer);
+  fs.writeFileSync(filePath, buffer);
 
   // Return the created filename
   return filename;
@@ -46,10 +52,10 @@ export const deleteImage = (filename: string): void => {
   fs.unlinkSync(oldImagePath);
 };
 
-export function updateImage(
+export const updateImage = async (
   oldFilename: string,
   file: Express.Multer.File
-): string {
+): Promise<string> => {
   // Delete the old image file
   deleteImage(oldFilename);
 
@@ -57,4 +63,4 @@ export function updateImage(
   const newFilename = saveImage(file);
 
   return newFilename;
-}
+};
