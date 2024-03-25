@@ -36,7 +36,13 @@
             </li>
             {{#if currentUser }}
               <li class="nav-item">
+                <a class="nav-link" href="/shop">Shop Donations</a>
+              </li>
+              <li class="nav-item">
                 <a class="nav-link" href="/donation-items">Your donations</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/requests">Your Requests</a>
               </li>
             {{/if}}
             {{#if (eq currentUser.role "ADMIN")}}

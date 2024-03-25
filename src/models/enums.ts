@@ -32,8 +32,21 @@ export enum StorageRequirement {
   FROZEN = "FROZEN",
 }
 
+// Define the date types
 export enum DateType {
   USE_BY = "USE_BY",
   BEST_BEFORE = "BEST_BEFORE",
   PRODUCTION_DATE = "PRODUCTION_DATE",
+}
+
+// Define the order status
+export enum RequestStatus {
+  PENDING = "PENDING",
+  ACCEPTED = "ACCEPTED",
+  REJECTED = "REJECTED",
+}
+
+export enum DeliveryMethod {
+  COLLECT = "COLLECT",
+  RECIEVE = "RECIEVE",
 }
