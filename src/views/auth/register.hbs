@@ -1,43 +1,69 @@
-<form action="/auth/register" method="POST">
-  <label for="firstname" class="form-label">firstname</label>
-  <input
-    type="text"
-    id="firstname"
-    name="firstname"
-    class="form-control"
-    required
-  />
+<div class="min-vh-100 d-flex justify-content-center align-items-start">
+  <div class="col-12 col-md-6 col-lg-4">
+    <div class="rounded p-4 bg-white shadow m-4">
+      <h1>Register</h1>
+      <p class="mt-4">Already have an account?
+        <a href="/auth/login/" class="link-secondary">Login here</a></p>
+      <form action="/auth/register" method="POST">
+        <div class="mt-4">
+          <label for="firstname" class="form-label">Firstname</label>
+          <input
+            type="text"
+            id="firstname"
+            name="firstname"
+            class="form-control"
+            placeholder="Firstname"
+            required
+          />
+        </div>
+        <div class="mt-4">
+          <label for="lastname" class="form-label">Lastname</label>
+          <input
+            type="text"
+            id="lastname"
+            name="lastname"
+            class="form-control"
+            placeholder="Lastname"
+            required
+          />
+        </div>
+        <div class="mt-4">
+          <label for="email" class="form-label">Email</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            class="form-control"
+            placeholder="Email Address"
+            required
+          />
+        </div>
+        <div class="mt-4">
+          <label for="password" class="form-label">Password</label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            class="form-control"
+            placeholder="Password"
+            required
+          />
+        </div>
+        <button
+          type="submit"
+          class="btn btn-primary mt-4 w-100"
+        >Register</button>
+      </form>
 
-  <label for="lastname" class="form-label">lastname</label>
-  <input
-    type="text"
-    id="lastname"
-    name="lastname"
-    class="form-control"
-    required
-  />
-
-  <label for="email" class="form-label">Email</label>
-  <input type="email" id="email" name="email" class="form-control" required />
-
-  <label for="password" class="form-label">Password</label>
-  <input
-    type="password"
-    id="password"
-    name="password"
-    class="form-control"
-    required
-  />
-
-  <button type="submit" class="btn btn-primary">Register</button>
-</form>
-
-{{#if errors}}
-  <ul>
-    {{#each errors}}
-      <div class="alert alert-danger" role="alert">
-        {{this.message}}
-      </div>
-    {{/each}}
-  </ul>
-{{/if}}
+      {{#if errors}}
+        <ul class="list-unstyled">
+          {{#each errors}}
+            <div class="alert alert-danger" role="alert">
+              {{this.message}}
+            </div>
+          {{/each}}
+        </ul>
+      {{/if}}
+    </div>
+  </div>
+</div>
