@@ -19,7 +19,7 @@
   </head>
   <body>
     <nav class="navbar navbar-expand-lg bg-light">
-      <div class="container-fluid">
+      <div class="container">
         <a class="navbar-brand" href="/">
           <img src="/images/TSPN_logo.png" alt="Logo" width="64" class="d-inline-block me-3">
           spn-share-app
@@ -36,7 +36,7 @@
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul class="navbar-nav">
+          <ul class="navbar-nav me-auto">
             <li class="nav-item">
               <a class="nav-link" aria-current="page" href="/about">About</a>
             </li>
@@ -54,7 +54,9 @@
                 <a class="nav-link" href="/requests">Your Requests</a>
               </li>
             {{/if}}
-            {{#if (eq currentUser.role "ADMIN")}}
+          </ul>
+          {{#if (eq currentUser.role "ADMIN")}}
+            <ul class="navbar-nav">
               <li class="nav-item dropdown">
                 <a
                   class="nav-link dropdown-toggle"
@@ -69,14 +71,18 @@
                   <li><a class="dropdown-item" href="/users">Manage users</a></li>
                 </ul>
               </li>
-            {{/if}}
+            </ul>
+          {{/if}}
+          <ul class="navbar-nav">
             {{> loginRegister }}
           </ul>
         </div>
       </div>
     </nav>
 
-    {{{body}}}
+    <div class="container">
+      {{{body}}}
+    </div>
 
     <!-- Bootstrap Bundle with Popper -->
     <script src="/js/bootstrap.bundle.min.js"></script>
