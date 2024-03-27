@@ -21,6 +21,17 @@
     value="{{user.lastname}}"
   />
 
+  <label for="mobile" class="form-label" >Mobile</label><br />
+  <input
+    type="text"
+    class="form-control"
+    id="mobile"
+    name="mobile"
+    required
+    minlength="10"
+    maxlength="10"
+    value="{{user.mobile}}"
+  />
   <label for="role" class="form-label">Role</label><br />
   <select id="role" class="form-select" name="role">
     <option value="DONATOR" {{#if (eq user.role 'DONATOR')}}selected{{/if}}>Donator</option>

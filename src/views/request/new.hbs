@@ -1,41 +1,43 @@
-<h2>Request a donation item</h2>
-<p>Name: {{donationItem.name}}</p>
-<p>Description: {{donationItem.description}}</p>
-<p>Category: {{donationItem.category}}</p>
-<p>Available:
-  {{donationItem.measurement.value}}
-  {{donationItem.measurement.type}}</p>
+<h1 class="mt-3">Request a donation item</h1>
+<div class="rounded bg-light shadow p-3">
+  <p>Name: {{donationItem.name}}</p>
+  <p>Description: {{donationItem.description}}</p>
+  <p>Category: {{donationItem.category}}</p>
+  <p>Available:
+    {{donationItem.measurement.value}}
+    {{donationItem.measurement.type}}</p>
 
-<form action="/requests" method="post">
-  <div class="form-group">
-    <label for="deliveryMethod" class="form-label">Delivery Method</label>
-    <select class="form-select" name="deliveryMethod">
-      {{#each deliveryOptions}}
-        <option value="{{this}}" {{#if (eq this ../deliveryMethod)}}selected{{/if}}>{{this}}</option>
-      {{/each}}
-    </select>
-  </div>
-  <div class="form-group">
-    <label for="streetName">Building Number and Street Name</label>
-    <input type="text" class="form-control" name="address[street]" required />
-  </div>
-  <div class="form-group">
-    <label for="city">Town or City</label>
-    <input type="text" class="form-control" name="address[city]" required />
-  </div>
-  <div class="form-group">
-    <label for="county">County</label>
-    <input type="text" class="form-control" name="address[county]" />
-  </div>
-  <div class="form-group">
-    <label for="postcode">Postcode</label>
-    <input type="text" class="form-control" name="address[postcode]" required />
-  </div>
-  <div class="form-group">
-    <label for="additionalNotes">Additional Notes</label>
-    <textarea class="form-control" name="additionalNotes" required></textarea>
-  </div>
+  <form action="/requests" method="post">
+    <div class="form-group mb-3">
+      <label for="deliveryMethod" class="form-label">Delivery Method</label>
+      <select class="form-select" name="deliveryMethod">
+        {{#each deliveryOptions}}
+          <option value="{{this}}" {{#if (eq this ../deliveryMethod)}}selected{{/if}}>{{this}}</option>
+        {{/each}}
+      </select>
+    </div>
+      <div class="form-group mb-3">
+        <label for="streetName">Building Number and Street Name</label>
+        <input type="text" class="form-control" name="address[street]" required />
+      </div>
+      <div class="form-groupmb-3">
+        <label for="city">Town or City</label>
+        <input type="text" class="form-control" name="address[city]" required />
+      </div>
+      <div class="form-group mb-3">
+        <label for="county">County</label>
+        <input type="text" class="form-control" name="address[county]" />
+      </div>
+      <div class="form-group mb-3">
+        <label for="postcode">Postcode</label>
+        <input type="text" class="form-control" name="address[postcode]" required />
+      </div>
+    <div class="form-group mb-3">
+      <label for="additionalNotes">Additional Notes</label>
+      <textarea class="form-control" name="additionalNotes" required></textarea>
+    </div>
 
-  <input type="hidden" name="donationItemId" value="{{donationItem._id}}" />
-  <button type="submit" class="btn btn-primary">Request</button>
-</form>
+    <input type="hidden" name="donationItemId" value="{{donationItem._id}}" />
+    <button type="submit" class="btn btn-primary">Request</button>
+  </form>
+</div>

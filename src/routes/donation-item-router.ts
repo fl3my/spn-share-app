@@ -26,9 +26,11 @@ const upload = multer({
 
 const donationItemModel = modelProvider.getDonationItemModel();
 const requestModel = modelProvider.getRequestModel();
+const userModel = modelProvider.getUserModel();
 const donationItemController = new DonationItemController(
   donationItemModel,
-  requestModel
+  requestModel,
+  userModel
 );
 
 // GET: /donation-items
@@ -70,6 +72,12 @@ donationItemRouter.delete("/:id", donationItemController.deleteDonationItem);
 donationItemRouter.get(
   "/:id/requests",
   donationItemController.getDonationItemRequests
+);
+
+// GET: /donation-items/:id/requests/:requestId
+donationItemRouter.get(
+  "/:id/requests/:requestId",
+  donationItemController.getRequest
 );
 
 // POST: /donation-items/:id/requests/:requestId/accept

@@ -15,6 +15,7 @@ const newRequestSchema = z.object({
   donationItemId: z.string(),
   deliveryMethod: z.nativeEnum(DeliveryMethod),
   address: addressSchema,
+  additionalNotes: z.string().optional(),
 });
 
 export class RequestController {
@@ -42,7 +43,19 @@ export class RequestController {
       // Find all requests by user ID
       const requests = await this.requestModel.findRequestsByUserId(user.id);
 
-      res.render("request/index", { requests });
+      // Find the item information for each request
+      const requestsWithItem = await Promise.all(
+        requests.map(async (request) => {
+          // Find the donation item by ID
+          const donationItem = await this.donationItemModel.findById(
+            request.donationItemId
+          );
+
+          return { ...request, donationItem };
+        })
+      );
+
+      res.render("request/index", { requests: requestsWithItem });
     } catch (error) {
       res.render("error", { error });
     }

@@ -5,6 +5,7 @@
       <thead>
         <tr>
           <th>Date Requested</th>
+          <th>Donation Item</th>
           <th>Status</th>
           <th>Delivery Method</th>
           <th>Actions</th>
@@ -14,6 +15,12 @@
         {{#each requests}}
           <tr>
             <td>{{formatDate this.dateRequested "DD MM YYYY"}}</td>
+            <td>
+              <a
+                href="/shop/{{this.donationItem._id}}"
+              >{{this.donationItem.measurement.value}}
+                {{this.donationItem.measurement.type}}
+                {{this.donationItem.name}}</a></td>
             <td>{{this.status}}</td>
             <td>{{this.deliveryMethod}}</td>
             <td>

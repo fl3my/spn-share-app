@@ -9,6 +9,7 @@ import {
 } from "../models/enums";
 import { deleteImage, saveImage, updateImage } from "../utils/image-handler";
 import { RequestModel } from "../models/request-model";
+import { UserModel } from "../models/user-model";
 
 const measurementSchema = z.object({
   type: z.nativeEnum(MeasurementType),
@@ -101,7 +102,8 @@ const formOptions = {
 export class DonationItemController {
   constructor(
     private donationItemModel: DonationItemModel,
-    private requestModel: RequestModel
+    private requestModel: RequestModel,
+    private userModel: UserModel
   ) {}
 
   // Get all donation items
@@ -380,7 +382,25 @@ export class DonationItemController {
         donationItemId
       );
 
-      res.render("donation-items/requests", { requests });
+      // Get the user for each request
+      const requestsWithUser = await Promise.all(
+        requests.map(async (request) => {
+          if (!request.userId) {
+            throw new Error("User ID is required");
+          }
+
+          const user = await this.userModel.findById(request.userId);
+
+          return {
+            ...request,
+            user,
+          };
+        })
+      );
+
+      res.render("donation-items/requests/index", {
+        requests: requestsWithUser,
+      });
     } catch (error) {
       res.status(500).render("error", { error: error });
     }
@@ -404,6 +424,30 @@ export class DonationItemController {
 
       // Redirect to the donation item requests page
       res.redirect(`/donation-items/${donationItemId}/requests`);
+    } catch (error) {
+      res.status(500).render("error", { error: error });
+    }
+  };
+
+  getRequest = async (req: Request, res: Response) => {
+    try {
+      if (!req.params.id || !req.params.requestId) {
+        throw new Error("Donation Item ID and Request ID are required");
+      }
+
+      const requestId = req.params.requestId;
+
+      // Get the request by ID
+      const request = await this.requestModel.findById(requestId);
+
+      if (!request) {
+        throw new Error("Request not found");
+      }
+
+      // Get the user for the request
+      const user = await this.userModel.findById(request.userId);
+
+      res.render("donation-items/requests/show", { request, user });
     } catch (error) {
       res.status(500).render("error", { error: error });
     }

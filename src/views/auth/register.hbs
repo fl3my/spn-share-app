@@ -1,6 +1,6 @@
 <div class="min-vh-100 d-flex justify-content-center align-items-start">
   <div class="col-12 col-md-6 col-lg-4">
-    <div class="rounded p-4 bg-white shadow my-3">
+    <div class="rounded p-4 bg-light shadow my-3">
       <h1>Register</h1>
       <p class="mt-4">Already have an account?
         <a href="/auth/login/" class="link-secondary">Login here</a></p>
@@ -24,6 +24,17 @@
             name="lastname"
             class="form-control"
             placeholder="Lastname"
+            required
+          />
+        </div>
+        <div class="mt-4">
+          <label for="mobile" class="form-label">Mobile number</label>
+          <input
+            type="text"
+            id="mobile"
+            name="mobile"
+            class="form-control"
+            placeholder="Mobile number"
             required
           />
         </div>

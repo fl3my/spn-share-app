@@ -6,6 +6,7 @@
       <thead>
         <tr>
           <th>Date Requested</th>
+          <th>Requested by</th>
           <th>Status</th>
           <th>Delivery Method</th>
           <th>Actions</th>
@@ -15,12 +16,11 @@
         {{#each requests}}
           <tr>
             <td>{{formatDate this.dateRequested "DD MM YYYY"}}</td>
+            <td>{{this.user.email}}</td>
             <td>{{this.status}}</td>
             <td>{{this.deliveryMethod}}</td>
             <td>
-              <form action="requests/{{this._id}}/accept" method="post">
-                <input type="submit" value="Accept" class="btn btn-primary" />
-              </form>
+              <a href="requests/{{this._id}}" class="btn btn-primary">View</a>
             </td>
           </tr>
         {{/each}}
