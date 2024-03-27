@@ -6,7 +6,9 @@ import { modelProvider } from "../models/model-provider";
 const shopRouter = express.Router();
 
 const donationItemModel = modelProvider.getDonationItemModel();
-const shopController = new ShopController(donationItemModel);
+const userModel = modelProvider.getUserModel();
+
+const shopController = new ShopController(donationItemModel, userModel);
 
 // GET: /shop?daysAfterBestBefore=daysAfterBestBefore&daysAfterProduction=daysAfterProduction&?category=category&searchTerm=searchTerm
 shopRouter.get("/", shopController.getShopItems);

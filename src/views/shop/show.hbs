@@ -1,30 +1,40 @@
-<nav aria-label="breadcrumb">
-  <ol class="breadcrumb">
-    <li class="breadcrumb-item"><a href="#">{{shopItem.category}}</a></li>
-    <li
-      class="breadcrumb-item active"
-      aria-current="page"
-    >{{shopItem.name}}</li>
-  </ol>
-</nav>
 
-<div class="row">
-  <div class="col-md-6">
-    <img
-      src="/uploads/{{shopItem.imageFilename}}"
-      class="img-fluid"
-      alt="{{shopItem.name}}"
-    />
+  <nav aria-label="breadcrumb" class="my-4 text-lowercase shadow">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="/shop">SHOP</a></li>
+      <li
+      <li class="breadcrumb-item"><a href="/shop?category={{shopItem.category}}">{{shopItem.category}}</a></li>
+      <li
+        class="breadcrumb-item active"
+        aria-current="page"
+      >{{shopItem.name}}</li>
+    </ol>
+  </nav>
+
+  <div class="bg-white p-4 rounded shadow">
+    <button class="btn btn-primary mb-4" onclick="history.back()">Go Back</button>
+    <div class="row">
+      <div class="col-md-6">
+        <img
+          src="/uploads/{{shopItem.imageFilename}}"
+          class="img-fluid"
+          alt="{{shopItem.name}}"
+        />
+      </div>
+      <div class="col-md-6">
+        <h2>{{shopItem.name}}</h2>
+        <p>{{shopItem.description}}</p>
+        <p>
+          {{shopItem.measurement.value}}
+          {{shopItem.measurement.type}} available</p>
+        <p>
+          {{shopItem.dateInfo.dateType}}
+          {{formatDate shopItem.dateInfo.date "DD MM YYYY"}}</p>
+        <p> Donated by: {{itemUser.role}} {{itemUser.firstname}} {{itemUser.lastname}}</p>
+        <a
+          class="btn btn-secondary"
+          href="/requests/new/{{shopItem._id}}"
+        >Make a request</a>
+      </div>
+    </div>
   </div>
-  <div class="col-md-6">
-    <h2>{{shopItem.name}}</h2>
-    <p>{{shopItem.description}}</p>
-    <p>Available:
-      {{shopItem.measurement.value}}
-      {{shopItem.measurement.type}}</p>
-    <p>Date:
-      {{shopItem.dateInfo.dateType}}
-      {{formatDate shopItem.dateInfo.date "DD MM YYYY"}}</p>
-    <a class="btn btn-primary" href="/requests/new/{{shopItem._id}}">Request</a>
-  </div>
-</div>

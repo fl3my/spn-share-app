@@ -1,75 +1,84 @@
-<h1>Donated items</h1>
+<div class="row mt-3">
+  <div class="col-md-4 col-lg-3 mb-3">
+  <div class="rounded p-4 bg-light shadow">
+  <form action="/shop" method="get">
+    <div class="mb-3">
+      <label for="searchTerm" class="form-label">Search</label>
+      <input
+        type="text"
+        name="searchTerm"
+        value="{{query.searchTerm}}"
+        class="form-control"
+      />
+    </div>
+    <div class="mb-3">
+      <label for="category" class="form-label">Category</label>
+      <select class="form-select" name="category">
+        <option value="">ALL</option>
+        {{#each categoryOptions}}
+          <option value="{{this}}" {{#if (eq this ../query.category)}}selected{{/if}}>{{this}}</option>
+        {{/each}}
+      </select>
+    </div>
+    <div class="mb-3">
+      <label for="daysAfterBestBefore" class="form-label">Days after best before</label>
+      <input
+        type="number"
+        name="daysAfterBestBefore"
+        value="{{query.daysAfterBestBefore}}"
+        class="form-control"
+      />
+      <div class="form-text">How many days after a best before date are you willing to accept.</div>
+    </div>
 
-<form action="/shop" method="get" class="d-flex mb-3">
-  <div class="me-3">
-    <label for="searchTerm" class="form-label">Search</label>
-    <input
-      type="text"
-      name="searchTerm"
-      value="{{query.searchTerm}}"
-      class="form-control"
-    />
-  </div>
-  <div class="me-3">
-    <label for="category" class="form-label">Category</label>
-    <select class="form-select" name="category">
-      <option value="">ALL</option>
-      {{#each categoryOptions}}
-        <option value="{{this}}" {{#if (eq this ../query.category)}}selected{{/if}}>{{this}}</option>
-      {{/each}}
-    </select>
-  </div>
-  <div class="me-3">
-    <label for="daysAfterBestBefore" class="form-label">Days after best before</label>
-    <input
-      type="number"
-      name="daysAfterBestBefore"
-      value="{{query.daysAfterBestBefore}}"
-      class="form-control"
-    />
+    <div class="mb-3">
+      <label for="daysAfterProduction" class="form-label">Days after production</label>
+      <input
+        type="number"
+        name="daysAfterProduction"
+        value="{{query.daysAfterProduction}}"
+        class="form-control"
+      />
+      <div class="form-text">How many days after the production of a item are you willing to accept.</div>
+    </div>
+
+    <button type="submit" class="btn btn-secondary align-self-end">Update</button>
+  </form>
   </div>
 
-  <div class="me-3">
-    <label for="daysAfterProduction" class="form-label">Days after production</label>
-    <input
-      type="number"
-      name="daysAfterProduction"
-      value="{{query.daysAfterProduction}}"
-      class="form-control"
-    />
   </div>
-
-  <button type="submit" class="btn btn-primary align-self-end">Update</button>
-</form>
-
-{{#if shopItems}}
-  <div class="row">
-    {{#each shopItems}}
-      <div class="col-md-4 mb-4">
-        <div class="card">
-          <img
-            src="/uploads/{{this.imageFilename}}"
-            class="card-img-top"
-            alt="{{this.name}}"
-          />
-          <div class="card-body">
-            <h5 class="card-title">{{this.name}}</h5>
-            <p class="card-text">
-              Category:
-              {{this.category}}<br />
-              Measurement:
-              {{this.measurement.value}}
-              {{this.measurement.type}}<br />
-              Date:
-              {{this.dateInfo.dateType}}
-              {{formatDate this.dateInfo.date "DD MM YYYY"}}
-            </p>
-            <a href="/shop/{{this._id}}" class="btn btn-primary">Show</a>
+  <div class="col-md-8 col-lg-9">
+  {{#if shopItems}}
+      <p>Showing all {{shopItems.length}} results</p>
+      {{#each shopItems}}
+      <a href="/shop/{{this._id}}" class="text-decoration-none text-black">
+          <div class="bg-light rounded mb-3 shadow">
+            <div class="row g-0">
+              <div class="col-md-4">
+            <img
+              src="/uploads/{{this.imageFilename}}"
+              class="img-fluid rounded-start"
+              alt="{{this.name}}"
+            />
+            </div>
+            <div class="col-md-8 p-3">
+              {{#if this.expiringToday }}
+              <span class="badge text-bg-danger float-end">EXPIRING TODAY</span>
+              {{/if}}
+              <h5>{{this.name}}</h5>
+              <p>
+                {{this.measurement.value}}
+                {{this.measurement.type}} Available<br>
+                {{this.dateInfo.dateType}}
+                {{formatDate this.dateInfo.date "DD MM YYYY"}}
+              </p>
+            </div>
           </div>
         </div>
-      </div>
-    {{/each}}
+        </a>
+      {{/each}}
+  {{else}}
+    <p>Sorry, no donations available!</p>
+  {{/if}}
   </div>
-{{else}}
-  <p>Sorry, no donations available!</p>
-{{/if}}
+</div>

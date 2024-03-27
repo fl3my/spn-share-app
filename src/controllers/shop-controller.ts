@@ -1,7 +1,8 @@
 import { Request, Response } from "express";
 import { DonationItemModel } from "../models/donation-item-model";
 import { z } from "zod";
-import { Category } from "../models/enums";
+import { Category, DateType } from "../models/enums";
+import { UserModel } from "../models/user-model";
 
 // Define a schema for the query parameters
 const queryParamsSchema = z.object({
@@ -20,7 +21,10 @@ const queryParamsSchema = z.object({
 });
 
 export class ShopController {
-  constructor(private donationItemModel: DonationItemModel) {}
+  constructor(
+    private donationItemModel: DonationItemModel,
+    private userModel: UserModel
+  ) {}
 
   // Get all items available in the shop
   getShopItems = async (req: Request, res: Response) => {
@@ -31,12 +35,34 @@ export class ShopController {
         query;
 
       // Get the shop items based on the query parameters
-      const shopItems = await this.donationItemModel.findNotOutOfDate(
+      const donationItems = await this.donationItemModel.findNotOutOfDate(
         daysAfterBestBefore,
         daysAfterProduction,
         category,
         searchTerm
       );
+
+      // Add a badge to show if the item is expiring today
+      const shopItems = donationItems.map((item) => {
+        const currentDate = new Date();
+
+        currentDate.setHours(0, 0, 0, 0); // Set the time to midnight
+
+        let date;
+
+        // Check if the item is expiring today
+        if (
+          item.dateInfo.dateType == DateType.BEST_BEFORE ||
+          item.dateInfo.dateType == DateType.USE_BY
+        ) {
+          date = new Date(item.dateInfo.date);
+          date.setHours(0, 0, 0, 0);
+        }
+        return {
+          ...item,
+          expiringToday: date && date.getTime() === currentDate.getTime(),
+        };
+      });
 
       const categoryOptions = Object.values(Category);
 
@@ -60,7 +86,13 @@ export class ShopController {
         throw new Error("Donation Item not found");
       }
 
-      res.render("shop/show", { shopItem });
+      if (!shopItem.userId) {
+        throw new Error("User ID is required");
+      }
+
+      const itemUser = await this.userModel.findById(shopItem.userId);
+
+      res.render("shop/show", { shopItem, itemUser });
     } catch (error) {
       res.status(500).render("error", { error: error });
     }

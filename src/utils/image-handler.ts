@@ -27,7 +27,7 @@ export const saveImage = async (file: Express.Multer.File): Promise<string> => {
 
   // Resize the image to 640x640 pixels
   const buffer = await sharp(file.buffer)
-    .resize(640, 640, { fit: "cover", withoutEnlargement: true })
+    .resize(770, 510, { fit: "contain" })
     .toBuffer();
 
   // Write the image in the buffer to the uploads directory
