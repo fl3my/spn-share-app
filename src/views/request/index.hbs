@@ -1,27 +1,29 @@
-<h1>Your requests</h1>
-{{#if requests}}
-  <table class="table">
-    <thead>
-      <tr>
-        <th>Date Requested</th>
-        <th>Status</th>
-        <th>Delivery Method</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      {{#each requests}}
+<h1 class="mt-3">Your requests</h1>
+<div class="rounded shadow bg-light p-3">
+  {{#if requests}}
+    <table class="table table-light">
+      <thead>
         <tr>
-          <td>{{formatDate this.dateRequested "DD MM YYYY"}}</td>
-          <td>{{this.status}}</td>
-          <td>{{this.deliveryMethod}}</td>
-          <td>
-            <a href="/requests/{{this._id}}/cancel">Cancel</a>
-          </td>
+          <th>Date Requested</th>
+          <th>Status</th>
+          <th>Delivery Method</th>
+          <th>Actions</th>
         </tr>
-      {{/each}}
-    </tbody>
-  </table>
-{{else}}
-  <p>You haven't made any requests yet</p>
-{{/if}}
+      </thead>
+      <tbody>
+        {{#each requests}}
+          <tr>
+            <td>{{formatDate this.dateRequested "DD MM YYYY"}}</td>
+            <td>{{this.status}}</td>
+            <td>{{this.deliveryMethod}}</td>
+            <td>
+              <a href="/requests/{{this._id}}/cancel">Cancel</a>
+            </td>
+          </tr>
+        {{/each}}
+      </tbody>
+    </table>
+  {{else}}
+    <p>You haven't made any requests yet</p>
+  {{/if}}
+</div>

@@ -51,9 +51,23 @@ export class RequestModel extends DocumentModel<RequestDocument> {
     donationItemId: string
   ): Promise<RequestDocument[]> {
     try {
-      return await this.db.findAsync({ donationItemId });
+      return await this.db
+        .findAsync({ donationItemId })
+        .sort({ dateRequested: -1 });
     } catch (error) {
       console.error("Error finding requests by donation item ID: ", error);
+      throw error;
+    }
+  }
+
+  async getRequestCountByDonationItemId(
+    donationItemId: string
+  ): Promise<number> {
+    try {
+      // Count the number of requests for the donation item ID
+      return await this.db.countAsync({ donationItemId });
+    } catch (error) {
+      console.error("Error getting request count by donation item ID: ", error);
       throw error;
     }
   }

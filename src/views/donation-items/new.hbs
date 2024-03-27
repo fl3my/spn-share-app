@@ -1,116 +1,122 @@
-<form action="/donation-items" method="post" enctype="multipart/form-data">
-  <div class="mb-3">
-    <label for="image" class="form-label">Image</label>
-    <input type="file" class="form-control" id="image" name="image" accept="image/*" onchange="updatePreview(this, 'image-preview')" />
-  </div>
-  <div class="mb-3">
-    <img id="image-preview" src="" alt="Image Preview" style="max-width: 200px; max-height: 200px;" />
-  </div>
-  <div class="mb-3">
-    <label for="name" class="form-label">Name</label>
-    <input type="text" class="form-control" id="name" name="name" value="{{donationItem.name}}" required />
-  </div>
-
-  <div class="mb-3">
-    <label for="description" class="form-label">Description</label>
-    <textarea
-      class="form-control"
-      id="description"
-      name="description"
-      required
-    >{{donationItem.description}}</textarea>
-  </div>
-
-  <div class="mb-3">
-    <label for="category" class="form-label">Category</label>
-    <select class="form-select" id="category" name="category" required>
-      {{#each formOptions.categoryOptions}}
-        <option value="{{this}}" {{#if (eq this ../donationItem.category)}}selected{{/if}}>{{this}}</option>
-      {{/each}}
-    </select>
-  </div>
-
-  <div class="mb-3">
-    <label for="storageRequirement" class="form-label">Storage Requirement</label>
-    <select
-      class="form-select"
-      id="storageRequirement"
-      name="storageRequirement"
-      required
-    >
-      {{#each formOptions.storageOptions}}
-        <option value="{{this}}">{{this}}</option>
-      {{/each}}
-    </select>
-  </div>
-
-  <div class="row">
-    <div class="col-md-6 mb-3">
-      <label for="measurementValue" class="form-label">Measurement Value</label>
-      <input
-        type="number"
-        class="form-control"
-        id="measurementValue"
-        name="measurement[value]"
-        value="{{donationItem.measurement.value}}"
-        required
-      />
+<h1 class="mt-3">Create a new donation item</h1>
+<div class="rounded bg-light shadow mt-3 p-3">
+  <a class="btn btn-primary mb-3" href="/donation-items">Go back</a>
+  <form action="/donation-items" method="post" enctype="multipart/form-data">
+    <div class="mb-3">
+      <label for="image" class="form-label">Image</label>
+      <input type="file" class="form-control" id="image" name="image" accept="image/*" onchange="updatePreview(this, 'image-preview')" />
     </div>
-    <div class="col-md-6 mb-3">
-      <label for="measurementType" class="form-label">Measurement Type</label>
-      <select
-        class="form-select"
-        id="measurementType"
-        name="measurement[type]"
+    <div class="mb-3">
+      <img id="image-preview" src="" alt="Image Preview" style="max-width: 200px; max-height: 200px;" />
+    </div>
+    <div class="mb-3">
+      <label for="name" class="form-label">Name</label>
+      <input type="text" class="form-control" id="name" name="name" value="{{donationItem.name}}" required />
+    </div>
+
+    <div class="mb-3">
+      <label for="description" class="form-label">Description</label>
+      <textarea
+        class="form-control"
+        id="description"
+        name="description"
         required
-      >
-        {{#each formOptions.measurementOptions}}
-          <option value="{{this}}" {{#if (eq this ../donationItem.measurement.type)}}selected{{/if}}>{{this}}</option>
+      >{{donationItem.description}}</textarea>
+      <div class="form-text">Write a brief description about your item.</div>
+    </div>
+
+    <div class="mb-3">
+      <label for="category" class="form-label">Category</label>
+      <select class="form-select" id="category" name="category" required>
+        {{#each formOptions.categoryOptions}}
+          <option value="{{this}}" {{#if (eq this ../donationItem.category)}}selected{{/if}}>{{this}}</option>
         {{/each}}
       </select>
     </div>
-  </div>
 
-  <div class="row">
-
-    <div class="col-md-6 mb-3">
-      <label for="date" class="form-label">Date</label>
-      <input
-        type="date"
-        class="form-control"
-        id="date"
-        name="dateInfo[date]"
-        value="{{donationItem.dateInfo.date}}"
-        required
-      />
-    </div>
-    <div class="col-md-6 mb-3">
-      <label for="dateType" class="form-label">Date Type</label>
+    <div class="mb-3">
+      <label for="storageRequirement" class="form-label">Storage Requirement</label>
       <select
         class="form-select"
-        id="dateType"
-        name="dateInfo[dateType]"
+        id="storageRequirement"
+        name="storageRequirement"
         required
       >
-        {{#each formOptions.dateOptions}}
-          <option value="{{this}}" {{#if (eq this ../donationItem.dateInfo.dateType)}}selected{{/if}}>{{this}}</option>
+        {{#each formOptions.storageOptions}}
+          <option value="{{this}}">{{this}}</option>
         {{/each}}
       </select>
+      <div class="form-text">Does your items require special storage?</div>
     </div>
-  </div>
 
-  <button type="submit" class="btn btn-primary">Submit</button>
-</form>
-
-{{#if errors}}
-  <ul>
-    {{#each errors}}
-      <div class="alert alert-danger" role="alert">
-        {{this.message}}
+    <div class="row">
+      <div class="col-md-6 mb-3">
+        <label for="measurementValue" class="form-label">Measurement Value</label>
+        <input
+          type="number"
+          class="form-control"
+          id="measurementValue"
+          name="measurement[value]"
+          value="{{donationItem.measurement.value}}"
+          required
+        />
       </div>
-    {{/each}}
-  </ul>
-{{/if}}
+      <div class="col-md-6 mb-3">
+        <label for="measurementType" class="form-label">Measurement Type</label>
+        <select
+          class="form-select"
+          id="measurementType"
+          name="measurement[type]"
+          required
+        >
+          {{#each formOptions.measurementOptions}}
+            <option value="{{this}}" {{#if (eq this ../donationItem.measurement.type)}}selected{{/if}}>{{this}}</option>
+          {{/each}}
+        </select>
+      </div>
+    </div>
+
+    <div class="row">
+
+      <div class="col-md-6 mb-3">
+        <label for="date" class="form-label">Date</label>
+        <input
+          type="date"
+          class="form-control"
+          id="date"
+          name="dateInfo[date]"
+          value="{{donationItem.dateInfo.date}}"
+          required
+        />
+      </div>
+      <div class="col-md-6 mb-3">
+        <label for="dateType" class="form-label">Date Type</label>
+        <select
+          class="form-select"
+          id="dateType"
+          name="dateInfo[dateType]"
+          required
+        >
+          {{#each formOptions.dateOptions}}
+            <option value="{{this}}" {{#if (eq this ../donationItem.dateInfo.dateType)}}selected{{/if}}>{{this}}</option>
+          {{/each}}
+        </select>
+      </div>
+    </div>
+
+    <button type="submit" class="btn btn-secondary">Submit</button>
+  </form>
+
+  {{#if errors}}
+    <ul>
+      {{#each errors}}
+        <div class="alert alert-danger" role="alert">
+          {{this.message}}
+        </div>
+      {{/each}}
+    </ul>
+  {{/if}}
+</div>
 
 <script>
   function updatePreview(input, target) {

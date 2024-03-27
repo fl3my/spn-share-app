@@ -121,10 +121,41 @@ export class DonationItemController {
         throw new Error("No user ID found in request");
       }
 
+      // Get all donation items by user ID
       const donationItems =
         await this.donationItemModel.findDonationItemsByUserId(user.id);
 
-      res.render("donation-items/index", { donationItems });
+      // If there are donation items
+      if (donationItems) {
+        //
+        const donationItemsWithRequests = await Promise.all(
+          donationItems.map(async (donationItem) => {
+            // Get the count of domations for the donation item
+
+            if (!donationItem._id) {
+              throw new Error("Donation Item ID is required");
+            }
+
+            // Get the donation item by ID
+            const requestCount =
+              await this.requestModel.getRequestCountByDonationItemId(
+                donationItem._id
+              );
+            return {
+              ...donationItem,
+              requestCount,
+            };
+          })
+        );
+
+        res.render("donation-items/index", {
+          donationItems: donationItemsWithRequests,
+        });
+      } else {
+        res.render("donation-items/index", {
+          donationItems,
+        });
+      }
     } catch (error) {
       res.status(500).render("error", { error: error });
     }

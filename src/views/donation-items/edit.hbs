@@ -1,4 +1,7 @@
+<h1 class="mt-3">Edit your donation item</h1>
+<div class="rounded bg-light shadow mt-3 p-3">
 <form action="/donation-items/{{donationItem._id}}?_method=PATCH" method="POST" enctype="multipart/form-data">
+<a class="btn btn-primary mb-3" href="/donation-items">Go back</a>
 <div class="mb-3">
     <label for="image" class="form-label">Image</label>
     <input type="file" class="form-control" id="image" name="image" accept="image/*" onchange="updatePreview(this, 'image-preview')" />
@@ -26,6 +29,7 @@
       name="description"
       required
     >{{donationItem.description}}</textarea>
+    <div class="form-text">Write a brief description about your item.</div>
   </div>
 
   <div class="mb-3">
@@ -49,6 +53,7 @@
         <option value="{{this}}" {{#if (eq this ../donationItem.storageRequirement)}}selected{{/if}}>{{this}}</option>
       {{/each}}
     </select>
+    <div class="form-text">Does your items require special storage?</div>
   </div>
 
   <div class="row">
@@ -106,7 +111,7 @@
     </div>
   </div>
 
-  <button type="submit" class="btn btn-primary">Submit</button>
+  <button type="submit" class="btn btn-secondary">Submit</button>
 </form>
 
 {{#if errors}}
@@ -118,7 +123,7 @@
     {{/each}}
   </ul>
 {{/if}}
-
+</div>
 <script>
   function updatePreview(input, target) {
     let file = input.files[0];
