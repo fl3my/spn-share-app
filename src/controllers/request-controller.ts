@@ -1,9 +1,8 @@
 import { Request, Response } from "express";
-import { RequestModel } from "../models/request-model";
-import { DonationItemModel } from "../models/donation-item-model";
 import { z } from "zod";
+
 import { DeliveryMethod, DonationStatus, RequestStatus } from "../models/enums";
-import { UserModel } from "../models/user-model";
+import { DataStoreContext } from "../models/data-store-context";
 
 const addressSchema = z.object({
   street: z.string(),
@@ -20,11 +19,7 @@ const newRequestSchema = z.object({
 });
 
 export class RequestController {
-  constructor(
-    private requestModel: RequestModel,
-    private donationItemModel: DonationItemModel,
-    private userModel: UserModel
-  ) {}
+  constructor(private dsContext: DataStoreContext) {}
 
   getRequest = async (req: Request, res: Response) => {
     try {
@@ -35,14 +30,14 @@ export class RequestController {
       const requestId = req.params.requestId;
 
       // Get the request by ID
-      const request = await this.requestModel.findById(requestId);
+      const request = await this.dsContext.request.findById(requestId);
 
       if (!request) {
         throw new Error("Request not found");
       }
 
       // Get the donation item for the request
-      const donationItem = await this.donationItemModel.findById(
+      const donationItem = await this.dsContext.donationItem.findById(
         request.donationItemId
       );
 
@@ -52,7 +47,7 @@ export class RequestController {
       }
 
       // Get the user for the request
-      const user = await this.userModel.findById(donationItem.userId);
+      const user = await this.dsContext.user.findById(donationItem.userId);
 
       res.render("request/show", { request, user });
     } catch (error) {
@@ -71,13 +66,15 @@ export class RequestController {
       }
 
       // Find all requests by user ID
-      const requests = await this.requestModel.findRequestsByUserId(user.id);
+      const requests = await this.dsContext.request.findRequestsByUserId(
+        user.id
+      );
 
       // Find the item information for each request
       const requestsWithItem = await Promise.all(
         requests.map(async (request) => {
           // Find the donation item by ID
-          const donationItem = await this.donationItemModel.findById(
+          const donationItem = await this.dsContext.donationItem.findById(
             request.donationItemId
           );
 
@@ -101,7 +98,7 @@ export class RequestController {
         throw new Error("Donation item ID is required");
       }
 
-      const donationItem = await this.donationItemModel.findById(
+      const donationItem = await this.dsContext.donationItem.findById(
         donationItemId
       );
 
@@ -129,7 +126,7 @@ export class RequestController {
       }
 
       // Check if a request already exists for this donation item
-      const requestExists = await this.requestModel.requestExists(
+      const requestExists = await this.dsContext.request.requestExists(
         newRequest.donationItemId,
         user.id
       );
@@ -140,7 +137,7 @@ export class RequestController {
       }
 
       // Insert the new request with additional properties
-      await this.requestModel.insert({
+      await this.dsContext.request.insert({
         ...newRequest,
         userId: user.id,
         dateRequested: new Date(),
@@ -166,14 +163,14 @@ export class RequestController {
       }
 
       // Check if the request exists
-      const request = await this.requestModel.findById(requestId);
+      const request = await this.dsContext.request.findById(requestId);
 
       if (!request) {
         throw new Error("Request not found");
       }
 
       // Delete the request
-      await this.requestModel.remove(requestId);
+      await this.dsContext.request.remove(requestId);
 
       res.redirect("/requests");
     } catch (error) {
@@ -190,7 +187,7 @@ export class RequestController {
       }
 
       // Check if the request exists
-      const request = await this.requestModel.findById(requestId);
+      const request = await this.dsContext.request.findById(requestId);
 
       if (!request) {
         throw new Error("Request not found");
@@ -201,7 +198,7 @@ export class RequestController {
         throw new Error("Request is not accepted");
       }
       // Get the donation item
-      const donationItem = await this.donationItemModel.findById(
+      const donationItem = await this.dsContext.donationItem.findById(
         request.donationItemId
       );
 
@@ -215,17 +212,20 @@ export class RequestController {
       }
 
       // Update the donation status to completed
-      await this.donationItemModel.update(donationItem._id, {
+      await this.dsContext.donationItem.update(donationItem._id, {
         status: DonationStatus.COMPLETED,
       });
 
       // Update the request status to completed
-      await this.requestModel.update(requestId, {
+      await this.dsContext.request.update(requestId, {
         status: RequestStatus.COMPLETED,
       });
 
       // Reject all other requests for the donation item
-      await this.requestModel.rejectOtherRequests(donationItem._id, requestId);
+      await this.dsContext.request.rejectOtherRequests(
+        donationItem._id,
+        requestId
+      );
 
       res.redirect("/requests");
     } catch (error) {

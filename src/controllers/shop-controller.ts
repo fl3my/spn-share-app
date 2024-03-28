@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
-import { DonationItemModel } from "../models/donation-item-model";
 import { z } from "zod";
+
 import { Category, DateType } from "../models/enums";
-import { UserModel } from "../models/user-model";
+import { DataStoreContext } from "../models/data-store-context";
 
 // Define a schema for the query parameters
 const queryParamsSchema = z.object({
@@ -21,10 +21,7 @@ const queryParamsSchema = z.object({
 });
 
 export class ShopController {
-  constructor(
-    private donationItemModel: DonationItemModel,
-    private userModel: UserModel
-  ) {}
+  constructor(private dsContext: DataStoreContext) {}
 
   // Get all items available in the shop
   getShopItems = async (req: Request, res: Response) => {
@@ -35,7 +32,7 @@ export class ShopController {
         query;
 
       // Get the shop items based on the query parameters
-      const donationItems = await this.donationItemModel.findNotOutOfDate(
+      const donationItems = await this.dsContext.donationItem.findNotOutOfDate(
         daysAfterBestBefore,
         daysAfterProduction,
         category,
@@ -80,7 +77,9 @@ export class ShopController {
         throw new Error("Donation Item ID is required");
       }
       // Get the donation item by ID
-      const shopItem = await this.donationItemModel.findById(req.params.id);
+      const shopItem = await this.dsContext.donationItem.findById(
+        req.params.id
+      );
 
       if (!shopItem) {
         throw new Error("Donation Item not found");
@@ -90,7 +89,7 @@ export class ShopController {
         throw new Error("User ID is required");
       }
 
-      const itemUser = await this.userModel.findById(shopItem.userId);
+      const itemUser = await this.dsContext.user.findById(shopItem.userId);
 
       res.render("shop/show", { shopItem, itemUser });
     } catch (error) {

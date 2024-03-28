@@ -1,7 +1,8 @@
 import { Request, Response } from "express";
-import { UserModel } from "../models/user-model";
-import { Role } from "../models/enums";
 import { z } from "zod";
+
+import { Role } from "../models/enums";
+import { DataStoreContext } from "../models/data-store-context";
 
 const newUserSchema = z.object({
   firstname: z.string().min(2),
@@ -21,10 +22,10 @@ const updatedUserSchema = z.object({
 });
 
 export class UserController {
-  constructor(private userModel: UserModel) {}
+  constructor(private modelProvider: DataStoreContext) {}
   // Get all users
   getAllUsers = async (req: Request, res: Response) => {
-    const users = await this.userModel.findAll();
+    const users = await this.modelProvider.user.findAll();
     res.render("users/index", { users });
   };
 
@@ -40,7 +41,7 @@ export class UserController {
       const newUser = newUserSchema.parse(req.body);
 
       // Insert the new user
-      await this.userModel.registerUser(newUser);
+      await this.modelProvider.user.registerUser(newUser);
 
       // Redirect to the users page
       res.redirect("/users");
@@ -61,7 +62,7 @@ export class UserController {
       return res.json({ error: "User ID is required" });
     }
     // Get the user by ID
-    const user = await this.userModel.findById(req.params.id);
+    const user = await this.modelProvider.user.findById(req.params.id);
 
     res.render("users/edit", { user });
   };
@@ -80,7 +81,7 @@ export class UserController {
       const updatedUser = updatedUserSchema.parse(req.body);
 
       // Update the user
-      await this.userModel.update(req.params.id, updatedUser);
+      await this.modelProvider.user.update(req.params.id, updatedUser);
 
       // Redirect to the users page
       res.redirect("/users");
@@ -106,7 +107,7 @@ export class UserController {
       return res.status(500).render("error", { error: "User ID is required" });
     }
     // Get the user by ID
-    const user = await this.userModel.findById(req.params.id);
+    const user = await this.modelProvider.user.findById(req.params.id);
 
     res.render("users/delete", { user });
   };
@@ -118,7 +119,7 @@ export class UserController {
         throw new Error("User ID is required");
       }
       // Delete the user by ID
-      await this.userModel.remove(req.params.id);
+      await this.modelProvider.user.remove(req.params.id);
 
       res.redirect("/users");
     } catch (error) {
@@ -133,7 +134,7 @@ export class UserController {
         throw new Error("User ID is required");
       }
       // Get the user by ID
-      const user = await this.userModel.findById(req.params.id);
+      const user = await this.modelProvider.user.findById(req.params.id);
 
       if (!user) {
         throw new Error("User not found");

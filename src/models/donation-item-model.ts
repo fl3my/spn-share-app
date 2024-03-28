@@ -1,4 +1,5 @@
 import DataStore from "@seald-io/nedb";
+
 import { DocumentModel, Document } from "./document-model";
 import {
   Category,

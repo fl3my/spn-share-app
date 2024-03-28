@@ -2,7 +2,7 @@ import express from "express";
 import multer from "multer";
 
 import { DonationItemController } from "../controllers/donation-item-controller";
-import { modelProvider } from "../models/model-provider";
+import { dsContext } from "../models/data-store-context";
 
 // Create a new router to handle /donation-items routes
 const donationItemRouter = express.Router();
@@ -24,14 +24,7 @@ const upload = multer({
   },
 });
 
-const donationItemModel = modelProvider.getDonationItemModel();
-const requestModel = modelProvider.getRequestModel();
-const userModel = modelProvider.getUserModel();
-const donationItemController = new DonationItemController(
-  donationItemModel,
-  requestModel,
-  userModel
-);
+const donationItemController = new DonationItemController(dsContext);
 
 // GET: /donation-items
 donationItemRouter.get("/", donationItemController.getAllUserDonationItems);

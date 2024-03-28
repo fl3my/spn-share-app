@@ -1,12 +1,12 @@
 import express from "express";
+
 import { UserController } from "../controllers/user-controller";
-import { modelProvider } from "../models/model-provider";
+import { dsContext } from "../models/data-store-context";
 
 // Create a new router to handle /user routes
 const userRouter = express.Router();
 
-const userModel = modelProvider.getUserModel();
-const userController = new UserController(userModel);
+const userController = new UserController(dsContext);
 
 // GET: /users
 userRouter.get("/", userController.getAllUsers);

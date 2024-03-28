@@ -1,8 +1,9 @@
 import { NextFunction, Request, Response } from "express";
 import { z } from "zod";
-import { UserModel } from "../models/user-model";
+
 import { Role } from "../models/enums";
 import passport from "../passport-config";
+import { DataStoreContext } from "../models/data-store-context";
 
 const loginSchema = z.object({
   email: z.string().email(),
@@ -18,7 +19,7 @@ const registerSchema = z.object({
 });
 
 export class AuthController {
-  constructor(private userModel: UserModel) {}
+  constructor(private dsContext: DataStoreContext) {}
 
   getLoginForm = async (req: Request, res: Response) => {
     res.render("auth/login");
@@ -84,7 +85,7 @@ export class AuthController {
       const userWithRole = { ...validatedRegister, role: Role.DONATOR };
 
       // Register the user
-      await this.userModel.registerUser(userWithRole);
+      await this.dsContext.user.registerUser(userWithRole);
 
       // Redirect the user to the login page
       res.render("auth/login", {

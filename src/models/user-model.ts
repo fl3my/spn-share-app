@@ -1,6 +1,7 @@
-import argon2 from "argon2";
-import { DocumentModel, Document } from "./document-model";
 import DataStore from "@seald-io/nedb";
+import argon2 from "argon2";
+
+import { DocumentModel, Document } from "./document-model";
 import { Role } from "./enums";
 
 // Define an inteface for the user document object

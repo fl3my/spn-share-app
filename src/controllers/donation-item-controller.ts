@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import { DonationItemModel } from "../models/donation-item-model";
 import { z } from "zod";
+
 import {
   Category,
   DateType,
@@ -9,8 +9,7 @@ import {
   StorageRequirement,
 } from "../models/enums";
 import { deleteImage, saveImage, updateImage } from "../utils/image-handler";
-import { RequestModel } from "../models/request-model";
-import { UserModel } from "../models/user-model";
+import { DataStoreContext } from "../models/data-store-context";
 
 const measurementSchema = z.object({
   type: z.nativeEnum(MeasurementType),
@@ -101,15 +100,11 @@ const formOptions = {
 };
 
 export class DonationItemController {
-  constructor(
-    private donationItemModel: DonationItemModel,
-    private requestModel: RequestModel,
-    private userModel: UserModel
-  ) {}
+  constructor(private dsContext: DataStoreContext) {}
 
   // Get all donation items
   getAllDonationItems = async (req: Request, res: Response) => {
-    const donationItems = await this.donationItemModel.findAll();
+    const donationItems = await this.dsContext.donationItem.findAll();
     res.render("donation-items/index", { donationItems });
   };
 
@@ -126,7 +121,7 @@ export class DonationItemController {
 
       // Get all donation items by user ID
       const donationItems =
-        await this.donationItemModel.findDonationItemsByUserId(user.id);
+        await this.dsContext.donationItem.findDonationItemsByUserId(user.id);
 
       // If there are donation items
       if (donationItems) {
@@ -141,7 +136,7 @@ export class DonationItemController {
 
             // Get the donation item by ID
             const requestCount =
-              await this.requestModel.getRequestCountByDonationItemId(
+              await this.dsContext.request.getRequestCountByDonationItemId(
                 donationItem._id
               );
             return {
@@ -201,7 +196,7 @@ export class DonationItemController {
       };
 
       // Insert the new donation item
-      await this.donationItemModel.insert(donationItemDocument);
+      await this.dsContext.donationItem.insert(donationItemDocument);
 
       // Redirect to the donation items page
       res.redirect("/donation-items");
@@ -231,7 +226,9 @@ export class DonationItemController {
     }
 
     // Get the donation item by ID
-    const donationItem = await this.donationItemModel.findById(req.params.id);
+    const donationItem = await this.dsContext.donationItem.findById(
+      req.params.id
+    );
 
     res.render("donation-items/edit", { donationItem, formOptions });
   };
@@ -248,7 +245,7 @@ export class DonationItemController {
       }
 
       // Get the current donation item
-      const currentDonationItem = await this.donationItemModel.findById(
+      const currentDonationItem = await this.dsContext.donationItem.findById(
         req.params.id
       );
 
@@ -265,7 +262,7 @@ export class DonationItemController {
       // Check if a new image file is provided
       if (req.file) {
         // Get the current donation item
-        const currentDonationItem = await this.donationItemModel.findById(
+        const currentDonationItem = await this.dsContext.donationItem.findById(
           req.params.id
         );
 
@@ -286,13 +283,16 @@ export class DonationItemController {
         };
 
         // Update the donation item
-        await this.donationItemModel.update(
+        await this.dsContext.donationItem.update(
           req.params.id,
           updatedDonationItemWithImage
         );
       } else {
         // Update the donation item
-        await this.donationItemModel.update(req.params.id, updatedDonationItem);
+        await this.dsContext.donationItem.update(
+          req.params.id,
+          updatedDonationItem
+        );
       }
 
       // Redirect to the donation items page
@@ -323,7 +323,9 @@ export class DonationItemController {
         .render("error", { error: "Donation Item ID is required" });
     }
     // Get the donation item by ID
-    const donationItem = await this.donationItemModel.findById(req.params.id);
+    const donationItem = await this.dsContext.donationItem.findById(
+      req.params.id
+    );
 
     res.render("donation-items/delete", { donationItem });
   };
@@ -335,7 +337,7 @@ export class DonationItemController {
         throw new Error("Donation Item ID is required");
       }
       // Delete the donation item by ID
-      const { imageFilename } = await this.donationItemModel.remove(
+      const { imageFilename } = await this.dsContext.donationItem.remove(
         req.params.id
       );
 
@@ -355,7 +357,9 @@ export class DonationItemController {
         throw new Error("Donation Item ID is required");
       }
       // Get the donation item by ID
-      const donationItem = await this.donationItemModel.findById(req.params.id);
+      const donationItem = await this.dsContext.donationItem.findById(
+        req.params.id
+      );
 
       if (!donationItem) {
         throw new Error("Donation Item not found");
@@ -380,9 +384,10 @@ export class DonationItemController {
       }
 
       // Get the donation item by ID
-      const requests = await this.requestModel.findRequestsByDonationItemId(
-        donationItemId
-      );
+      const requests =
+        await this.dsContext.request.findRequestsByDonationItemId(
+          donationItemId
+        );
 
       // Get the user for each request
       const requestsWithUser = await Promise.all(
@@ -391,7 +396,7 @@ export class DonationItemController {
             throw new Error("User ID is required");
           }
 
-          const user = await this.userModel.findById(request.userId);
+          const user = await this.dsContext.user.findById(request.userId);
 
           return {
             ...request,
@@ -422,10 +427,10 @@ export class DonationItemController {
       }
 
       // Accept the request
-      await this.requestModel.acceptRequest(requestId);
+      await this.dsContext.request.acceptRequest(requestId);
 
       // Accept the donation
-      await this.donationItemModel.acceptDonationItem(donationItemId);
+      await this.dsContext.donationItem.acceptDonationItem(donationItemId);
 
       // Redirect to the donation item requests page
       res.redirect(`/donation-items/${donationItemId}/requests`);
@@ -443,14 +448,14 @@ export class DonationItemController {
       const requestId = req.params.requestId;
 
       // Get the request by ID
-      const request = await this.requestModel.findById(requestId);
+      const request = await this.dsContext.request.findById(requestId);
 
       if (!request) {
         throw new Error("Request not found");
       }
 
       // Get the user for the request
-      const user = await this.userModel.findById(request.userId);
+      const user = await this.dsContext.user.findById(request.userId);
 
       res.render("donation-items/requests/show", { request, user });
     } catch (error) {

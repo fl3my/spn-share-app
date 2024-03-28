@@ -1,14 +1,12 @@
 import express from "express";
+
 import { ShopController } from "../controllers/shop-controller";
-import { modelProvider } from "../models/model-provider";
+import { dsContext } from "../models/data-store-context";
 
 // Create a new router to handle /shop routes
 const shopRouter = express.Router();
 
-const donationItemModel = modelProvider.getDonationItemModel();
-const userModel = modelProvider.getUserModel();
-
-const shopController = new ShopController(donationItemModel, userModel);
+const shopController = new ShopController(dsContext);
 
 // GET: /shop?daysAfterBestBefore=daysAfterBestBefore&daysAfterProduction=daysAfterProduction&?category=category&searchTerm=searchTerm
 shopRouter.get("/", shopController.getShopItems);

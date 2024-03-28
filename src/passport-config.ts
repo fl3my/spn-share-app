@@ -1,11 +1,9 @@
 import passport from "passport";
 import { Strategy as LocalStrategy } from "passport-local";
 
-import { modelProvider } from "./models/model-provider";
+import { dsContext } from "./models/data-store-context";
 
 // Get the user model instance
-const userModel = modelProvider.getUserModel();
-
 // Create a local strategy
 passport.use(
   new LocalStrategy(
@@ -16,11 +14,12 @@ passport.use(
         const email = username.toLowerCase();
 
         // Get the user by email
-        const user = await userModel.findByEmail(email);
+        const user = await dsContext.user.findByEmail(email);
 
         // Check if the user is valid and the password is correct
         const isValid =
-          user && (await userModel.verifyPassword(user.password, password));
+          user &&
+          (await dsContext.user.verifyPassword(user.password, password));
 
         // If the user is not valid or the password is incorrect, return false
         if (!user || !isValid) {
@@ -52,7 +51,7 @@ interface UserSession {
 passport.deserializeUser(async (id: string, done) => {
   try {
     // Get the user that matches the ID
-    const user = await userModel.findById(id);
+    const user = await dsContext.user.findById(id);
 
     // If the user does not exist, return false
     if (!user) {

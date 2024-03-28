@@ -1,12 +1,12 @@
 import express from "express";
+
 import { AuthController } from "../controllers/auth-controller";
-import { modelProvider } from "../models/model-provider";
+import { dsContext } from "../models/data-store-context";
 
 // Create a new router to handle /auth routes
 const authRouter = express.Router();
 
-const userModel = modelProvider.getUserModel();
-const authController = new AuthController(userModel);
+const authController = new AuthController(dsContext);
 
 // GET: /auth/login
 authRouter.get("/login", authController.getLoginForm);
