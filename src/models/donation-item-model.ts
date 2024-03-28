@@ -5,6 +5,7 @@ import {
   MeasurementType,
   StorageRequirement,
   DateType,
+  DonationStatus,
 } from "./enums";
 
 // Define an interface for the measurement
@@ -29,6 +30,7 @@ interface DonationItemDocument extends Document {
   measurement: Measurement;
   dateInfo: DateInfo;
   imageFilename: string;
+  status: DonationStatus;
 }
 
 // This is the donation item model class that extends the base document model
@@ -45,6 +47,33 @@ export class DonationItemModel extends DocumentModel<DonationItemDocument> {
       return await this.db.findAsync({ userId });
     } catch (error) {
       console.error("Error finding donations by user ID: ", error);
+      throw error;
+    }
+  }
+
+  async acceptDonationItem(id: string) {
+    try {
+      // Find the donation by ID
+      const donationItem = await super.findById(id);
+
+      // Check if the donation exists
+      if (!donationItem) {
+        throw new Error("Doantion item not found");
+      }
+
+      // Check if the donation item is already completed or claimed
+      if (
+        donationItem.status === DonationStatus.CLAIMED ||
+        donationItem.status === DonationStatus.COMPLETED
+      ) {
+        throw new Error("Donation item already claimed or completed");
+      }
+      // Update the donation in the database  with claimed
+      return await super.update(id, {
+        status: DonationStatus.CLAIMED,
+      });
+    } catch (error) {
+      console.error("Error accepting donation item: ", error);
       throw error;
     }
   }
@@ -72,6 +101,7 @@ export class DonationItemModel extends DocumentModel<DonationItemDocument> {
 
       // Create the base query
       let query: any = {
+        status: DonationStatus.AVAILABLE, // Get all donations that are available
         $or: [
           {
             "dateInfo.dateType": DateType.USE_BY,

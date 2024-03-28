@@ -5,6 +5,7 @@
       <thead>
         <tr>
           <th>Name</th>
+          <th>Status</th>
           <th>Actions</th>
           <th>Requests</th>
         </tr>
@@ -13,6 +14,7 @@
         {{#each donationItems}}
           <tr>
             <td>{{this.name}}</td>
+            <td>{{this.status}}</td>
             <td>
               <a
                 href="/donation-items/{{this._id}}/edit"

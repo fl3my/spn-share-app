@@ -104,4 +104,26 @@ export class RequestModel extends DocumentModel<RequestDocument> {
       throw error;
     }
   }
+
+  async rejectOtherRequests(donationItemId: string, requestId: string) {
+    try {
+      // Find all requests for the donation item
+      const requests = await this.db.findAsync({ donationItemId });
+
+      // Reject all other requests
+      for (const request of requests) {
+        if (request._id !== requestId) {
+          if (!request._id) {
+            throw new Error("Request ID is required");
+          }
+
+          // Update the request status to rejected
+          await super.update(request._id, { status: RequestStatus.REJECTED });
+        }
+      }
+    } catch (error) {
+      console.error("Error rejecting other requests: ", error);
+      throw error;
+    }
+  }
 }

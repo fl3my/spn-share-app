@@ -47,6 +47,12 @@ export enum RequestStatus {
   COMPLETED = "COMPLETED",
 }
 
+export enum DonationStatus {
+  AVAILABLE = "AVAILABLE",
+  CLAIMED = "CLAIMED",
+  COMPLETED = "COMPLETED",
+}
+
 export enum DeliveryMethod {
   COLLECT = "COLLECT",
   RECIEVE = "RECIEVE",

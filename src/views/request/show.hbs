@@ -1,9 +1,6 @@
 <h1 class="mt-3">View donation item request</h1>
 <div class="rounded shadow bg-light p-3">
-  <a
-    href="/donation-items/{{request.donationItemId}}/requests"
-    class="btn btn-primary mb-3"
-  >Go back</a>
+  <a href="/requests" class="btn btn-primary mb-3">Go back</a>
   <h2>Request Information</h2>
   <p>Date Requested: {{request.dateRequested}}</p>
   <p>Request Status: {{request.status}}</p>
@@ -16,17 +13,13 @@
   <p>State: {{request.address.county}}</p>
   <p>Zip Code: {{request.address.postcode}}</p>
 
-  <h2>Requested by</h2>
-  <p>Requested by: {{user.firstname}} {{user.lastname}}</p>
+  <h2>Donated by</h2>
+  <p>Name: {{user.firstname}} {{user.lastname}}</p>
   <p>Email: {{user.email}}</p>
   <p>Phone: {{user.mobile}}</p>
 
-  Do you want to accept this request?
-  <form
-    id="acceptForm"
-    action="/donation-items/{{request.donationItemId}}/requests/{{request._id}}/accept"
-    method="post"
-  >
-    <button type="submit" class="btn btn-success">Accept</button>
+  Has this item been delivered?
+  <form method="post" action="/requests/{{request._id}}/complete">
+    <button type="submit" class="btn btn-success">Complete</button>
   </form>
 </div>

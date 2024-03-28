@@ -4,6 +4,7 @@ import { z } from "zod";
 import {
   Category,
   DateType,
+  DonationStatus,
   MeasurementType,
   StorageRequirement,
 } from "../models/enums";
@@ -196,6 +197,7 @@ export class DonationItemController {
         userId: user.id,
         dateCreated: new Date(),
         imageFilename: filename,
+        status: DonationStatus.AVAILABLE,
       };
 
       // Insert the new donation item
@@ -421,6 +423,9 @@ export class DonationItemController {
 
       // Accept the request
       await this.requestModel.acceptRequest(requestId);
+
+      // Accept the donation
+      await this.donationItemModel.acceptDonationItem(donationItemId);
 
       // Redirect to the donation item requests page
       res.redirect(`/donation-items/${donationItemId}/requests`);

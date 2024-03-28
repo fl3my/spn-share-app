@@ -2,7 +2,8 @@ import { Request, Response } from "express";
 import { RequestModel } from "../models/request-model";
 import { DonationItemModel } from "../models/donation-item-model";
 import { z } from "zod";
-import { DeliveryMethod, RequestStatus } from "../models/enums";
+import { DeliveryMethod, DonationStatus, RequestStatus } from "../models/enums";
+import { UserModel } from "../models/user-model";
 
 const addressSchema = z.object({
   street: z.string(),
@@ -19,16 +20,45 @@ const newRequestSchema = z.object({
 });
 
 export class RequestController {
-  private requestModel: RequestModel;
-  private donationItemModel: DonationItemModel;
-
   constructor(
-    requestModel: RequestModel,
-    donationItemModel: DonationItemModel
-  ) {
-    this.requestModel = requestModel;
-    this.donationItemModel = donationItemModel;
-  }
+    private requestModel: RequestModel,
+    private donationItemModel: DonationItemModel,
+    private userModel: UserModel
+  ) {}
+
+  getRequest = async (req: Request, res: Response) => {
+    try {
+      if (!req.params.requestId) {
+        throw new Error("Request ID are required");
+      }
+
+      const requestId = req.params.requestId;
+
+      // Get the request by ID
+      const request = await this.requestModel.findById(requestId);
+
+      if (!request) {
+        throw new Error("Request not found");
+      }
+
+      // Get the donation item for the request
+      const donationItem = await this.donationItemModel.findById(
+        request.donationItemId
+      );
+
+      // Check if the donation item exists
+      if (!donationItem || !donationItem.userId) {
+        throw new Error("Request not found");
+      }
+
+      // Get the user for the request
+      const user = await this.userModel.findById(donationItem.userId);
+
+      res.render("request/show", { request, user });
+    } catch (error) {
+      res.status(500).render("error", { error: error });
+    }
+  };
 
   // Define a method to get all user requests
   getUserRequests = async (req: Request, res: Response) => {
@@ -144,6 +174,58 @@ export class RequestController {
 
       // Delete the request
       await this.requestModel.remove(requestId);
+
+      res.redirect("/requests");
+    } catch (error) {
+      res.render("error", { error });
+    }
+  };
+
+  confirmCompleted = async (req: Request, res: Response) => {
+    try {
+      const requestId = req.params.requestId;
+
+      if (!requestId) {
+        throw new Error("Request ID is required");
+      }
+
+      // Check if the request exists
+      const request = await this.requestModel.findById(requestId);
+
+      if (!request) {
+        throw new Error("Request not found");
+      }
+
+      // If the request is not accepted
+      if (request.status !== RequestStatus.ACCEPTED) {
+        throw new Error("Request is not accepted");
+      }
+      // Get the donation item
+      const donationItem = await this.donationItemModel.findById(
+        request.donationItemId
+      );
+
+      if (!donationItem || !donationItem._id) {
+        throw new Error("Donation item not found");
+      }
+
+      // If the donation is not claimed
+      if (donationItem.status !== DonationStatus.CLAIMED) {
+        throw new Error("Donation item is not claimed");
+      }
+
+      // Update the donation status to completed
+      await this.donationItemModel.update(donationItem._id, {
+        status: DonationStatus.COMPLETED,
+      });
+
+      // Update the request status to completed
+      await this.requestModel.update(requestId, {
+        status: RequestStatus.COMPLETED,
+      });
+
+      // Reject all other requests for the donation item
+      await this.requestModel.rejectOtherRequests(donationItem._id, requestId);
 
       res.redirect("/requests");
     } catch (error) {
