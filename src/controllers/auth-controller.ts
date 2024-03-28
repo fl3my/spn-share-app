@@ -4,19 +4,7 @@ import { z } from "zod";
 import { Role } from "../models/enums";
 import passport from "../passport-config";
 import { DataStoreContext } from "../models/data-store-context";
-
-const loginSchema = z.object({
-  email: z.string().email(),
-  password: z.string().min(6),
-});
-
-const registerSchema = z.object({
-  firstname: z.string().min(2),
-  lastname: z.string().min(2),
-  mobile: z.string().min(10),
-  email: z.string().email(),
-  password: z.string().min(6),
-});
+import { loginSchema, registerSchema } from "../schemas/auth-schemas";
 
 export class AuthController {
   constructor(private dsContext: DataStoreContext) {}

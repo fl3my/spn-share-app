@@ -3,22 +3,7 @@ import { z } from "zod";
 
 import { Category, DateType } from "../models/enums";
 import { DataStoreContext } from "../models/data-store-context";
-
-// Define a schema for the query parameters
-const queryParamsSchema = z.object({
-  daysAfterBestBefore: z
-    .number({ coerce: true })
-    .int()
-    .nonnegative()
-    .default(0),
-  daysAfterProduction: z
-    .number({ coerce: true })
-    .int()
-    .nonnegative()
-    .default(7),
-  category: z.string().optional(),
-  searchTerm: z.string().optional(),
-});
+import { queryParamsSchema } from "../schemas/shop-schemas";
 
 export class ShopController {
   constructor(private dsContext: DataStoreContext) {}

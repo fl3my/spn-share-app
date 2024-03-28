@@ -1,22 +1,8 @@
 import { Request, Response } from "express";
-import { z } from "zod";
 
 import { DeliveryMethod, DonationStatus, RequestStatus } from "../models/enums";
 import { DataStoreContext } from "../models/data-store-context";
-
-const addressSchema = z.object({
-  street: z.string(),
-  city: z.string(),
-  county: z.string(),
-  postcode: z.string(),
-});
-
-const newRequestSchema = z.object({
-  donationItemId: z.string(),
-  deliveryMethod: z.nativeEnum(DeliveryMethod),
-  address: addressSchema,
-  additionalNotes: z.string().optional(),
-});
+import { newRequestSchema } from "../schemas/request-schemas";
 
 export class RequestController {
   constructor(private dsContext: DataStoreContext) {}
