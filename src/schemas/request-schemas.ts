@@ -4,7 +4,6 @@ import { DeliveryMethod } from "../models/enums";
 export const addressSchema = z.object({
   street: z.string(),
   city: z.string(),
-  county: z.string(),
   postcode: z.string(),
 });
 

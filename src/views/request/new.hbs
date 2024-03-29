@@ -16,6 +16,11 @@
         {{/each}}
       </select>
     </div>
+    <div class="form-group mb-3">
+      <label for="additionalNotes">Additional Notes</label>
+      <textarea class="form-control" name="additionalNotes" required></textarea>
+    </div>
+    <h3>Your address</h3>
       <div class="form-group mb-3">
         <label for="streetName">Building Number and Street Name</label>
         <input type="text" class="form-control" name="address[street]" required />
@@ -25,17 +30,10 @@
         <input type="text" class="form-control" name="address[city]" required />
       </div>
       <div class="form-group mb-3">
-        <label for="county">County</label>
-        <input type="text" class="form-control" name="address[county]" />
-      </div>
-      <div class="form-group mb-3">
         <label for="postcode">Postcode</label>
         <input type="text" class="form-control" name="address[postcode]" required />
       </div>
-    <div class="form-group mb-3">
-      <label for="additionalNotes">Additional Notes</label>
-      <textarea class="form-control" name="additionalNotes" required></textarea>
-    </div>
+    
 
     <input type="hidden" name="donationItemId" value="{{donationItem._id}}" />
     <button type="submit" class="btn btn-primary">Request</button>

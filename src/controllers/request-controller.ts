@@ -4,7 +4,6 @@ import { DeliveryMethod, DonationStatus, RequestStatus } from "../models/enums";
 import { DataStoreContext } from "../models/data-store-context";
 import { newRequestSchema } from "../schemas/request-schemas";
 import { geocodeAddress } from "../utils/geocode";
-import { calculateDistance } from "../utils/calculate-distance";
 
 export class RequestController {
   constructor(private dsContext: DataStoreContext) {}
@@ -71,18 +70,8 @@ export class RequestController {
             throw new Error("Donation item not found");
           }
 
-          const distance = calculateDistance(
-            request.address.coordinates,
-            donationItem.address.coordinates
-          );
-
-          return { ...request, donationItem, distance };
+          return { ...request, donationItem };
         })
-      );
-
-      // Sort the requests by distance
-      requestsWithItem = requestsWithItem.sort(
-        (a, b) => a.distance - b.distance
       );
 
       res.render("request/index", { requests: requestsWithItem });

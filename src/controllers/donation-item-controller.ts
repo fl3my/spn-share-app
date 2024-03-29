@@ -15,6 +15,7 @@ import {
   updateDonationItemSchema,
 } from "../schemas/donation-item-schemas";
 import { geocodeAddress } from "../utils/geocode";
+import { calculateDistance } from "../utils/calculate-distance";
 
 // Define a list of options for the form
 const formOptions = {
@@ -328,7 +329,7 @@ export class DonationItemController {
         );
 
       // Get the user for each request
-      const requestsWithUser = await Promise.all(
+      let requestsWithUser = await Promise.all(
         requests.map(async (request) => {
           if (!request.userId) {
             throw new Error("User ID is required");
@@ -336,11 +337,30 @@ export class DonationItemController {
 
           const user = await this.dsContext.user.findById(request.userId);
 
+          const donationItem = await this.dsContext.donationItem.findById(
+            request.donationItemId
+          );
+
+          if (!donationItem) {
+            throw new Error("Donation Item not found");
+          }
+
+          const distance = calculateDistance(
+            request.address.coordinates,
+            donationItem.address.coordinates
+          );
+
           return {
             ...request,
             user,
+            distance,
           };
         })
+      );
+
+      // Sort the requests by distance
+      requestsWithUser = requestsWithUser.sort(
+        (a, b) => a.distance - b.distance
       );
 
       res.render("donation-items/requests/index", {

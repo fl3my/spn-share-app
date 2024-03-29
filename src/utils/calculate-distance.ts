@@ -3,7 +3,7 @@ interface Coordinate {
   longitude: number;
 }
 
-// Calculate the distance between two coordinates in kilometers
+// Use the Haversine formula to calculate the distance between two coordinates
 export function calculateDistance(coord1: Coordinate, coord2: Coordinate) {
   // Radius of the earth in kilometers
   const earthRadius = 6371;
