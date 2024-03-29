@@ -28,5 +28,18 @@ export const ensureInRole = (role: Role) => {
   };
 };
 
+// Ensure that the user is in any of the specified roles
+export const ensureInRoles = (roles: Role[]) => {
+  return (req: Request, res: Response, next: NextFunction) => {
+    // Check if user has any of the specified roles
+    if (req.user && roles.includes(req.user.role as Role)) {
+      return next();
+    } else {
+      // Redirect to unauthorized page if not in any of the roles
+      res.redirect("/auth/unauthorized");
+    }
+  };
+};
+
 // Ensure that the user is an admin
 export const ensureAdmin = ensureInRole(Role.ADMIN);

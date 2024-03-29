@@ -13,11 +13,12 @@ dotenv.config();
 import passport from "./configs/passport-config";
 import { authRouter } from "./routes/auth-router";
 import { userRouter } from "./routes/user-router";
-import { ensureAdmin, ensureAuthenticated } from "./middleware/auth-middleware";
+import { ensureInRole, ensureInRoles } from "./middleware/auth-middleware";
 import { homeRouter } from "./routes/home-router";
 import { donationItemRouter } from "./routes/donation-item-router";
 import { shopRouter } from "./routes/shop-router";
 import { requestRouter } from "./routes/request-router";
+import { Role } from "./models/enums";
 
 // Create an express application
 const app = express();
@@ -69,6 +70,9 @@ app.engine(
       formatDate: function (date: Date, format: string) {
         return moment(date).format(format);
       },
+      or: function (v1: boolean, v2: boolean): boolean {
+        return v1 || v2;
+      },
     },
   })
 );
@@ -80,10 +84,14 @@ app.set("views", "src/views");
 // Define the routes
 app.use("/", homeRouter);
 app.use("/auth", authRouter);
-app.use("/users", ensureAdmin, userRouter);
-app.use("/donation-items", ensureAuthenticated, donationItemRouter);
-app.use("/shop", ensureAuthenticated, shopRouter);
-app.use("/requests", ensureAuthenticated, requestRouter);
+app.use("/users", ensureInRole(Role.ADMIN), userRouter);
+app.use(
+  "/donation-items",
+  ensureInRoles([Role.DONATOR, Role.PANTRY]),
+  donationItemRouter
+);
+app.use("/shop", ensureInRole(Role.PANTRY), shopRouter);
+app.use("/requests", ensureInRoles([Role.DONATOR, Role.PANTRY]), requestRouter);
 
 app.get("/", (req, res) => {
   res.render("home");
