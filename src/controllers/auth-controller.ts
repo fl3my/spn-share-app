@@ -4,7 +4,11 @@ import { z } from "zod";
 import { Role } from "../models/enums";
 import passport from "../configs/passport-config";
 import { DataStoreContext } from "../models/data-store-context";
-import { loginSchema, registerSchema } from "../schemas/auth-schemas";
+import {
+  loginSchema,
+  profileSchema,
+  registerSchema,
+} from "../schemas/auth-schemas";
 
 export class AuthController {
   constructor(private dsContext: DataStoreContext) {}
@@ -101,5 +105,64 @@ export class AuthController {
 
   unauthorized = async (req: Request, res: Response) => {
     res.status(403).render("auth/unauthorized");
+  };
+
+  getProfile = async (req: Request, res: Response) => {
+    try {
+      const currentUser = req.user;
+
+      // If the user is not logged in, redirect them to the login page
+      if (!currentUser) {
+        return res.redirect("/auth/login");
+      }
+
+      // Find the user in the data store
+      const user = await this.dsContext.user.findById(currentUser.id);
+
+      // Render the profile page
+      res.render("auth/profile", { user });
+    } catch (error) {
+      res.status(500).render("auth/profile", { errors: [error as Error] });
+    }
+  };
+
+  updateProfile = async (req: Request, res: Response) => {
+    try {
+      // Validate the request body
+      const updatedUser = profileSchema.parse(req.body);
+
+      const user = req.user;
+
+      // If the user is not logged in, redirect them to the login page
+      if (!user) {
+        return res.redirect("/auth/login");
+      }
+
+      // If the user is not the current user redirect them to the unauthorized page
+      if (updatedUser._id !== user.id) {
+        return res.status(403).render("auth/unauthorized");
+      }
+
+      // Update the user
+      await this.dsContext.user.update(updatedUser._id, updatedUser);
+
+      // Redirect to the users page
+      res.redirect("/");
+    } catch (error) {
+      const _id = req.body._id;
+      if (error instanceof z.ZodError) {
+        // Handle zod validation errors
+        res.status(400).render("auth/profile", {
+          errors: error.errors,
+          user: { ...req.body, _id },
+        });
+      } else {
+        // Other errors
+        res.status(500).render("auth/profile", {
+          errors: [error as Error],
+          user: { ...req.body, _id },
+        });
+      }
+    }
   };
 }

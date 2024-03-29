@@ -1,9 +1,11 @@
-<h1>User Details</h1>
+<h1 class="mt-3">User Details</h1>
+<div class="rounded shadow bg-light p-3">
+  <a href="/users" class="btn btn-primary">Back</a>
+  <p>First Name: {{user.firstname}}</p>
+  <p>Last Name: {{user.lastname}}</p>
+  <p>Role: {{user.role}}</p>
+  <p>Mobile: {{user.mobile}}</p>
+  <p>Email: {{user.email}}</p>
 
-<p>First Name: {{user.firstname}}</p>
-<p>Last Name: {{user.lastname}}</p>
-<p>Role: {{user.role}}</p>
-<p>Mobile: {{user.mobile}}</p>
-<p>Email: {{user.email}}</p>
-
-<a href="/users/{{user._id}}/edit">Edit User</a>
+  <a href="/users/{{user._id}}/edit">Edit User</a>
+</div>

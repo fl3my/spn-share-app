@@ -12,3 +12,10 @@ export const registerSchema = z.object({
   email: z.string().email(),
   password: z.string().min(6),
 });
+
+export const profileSchema = z.object({
+  _id: z.string(),
+  firstname: z.string().min(2),
+  lastname: z.string().min(2),
+  mobile: z.string().min(10),
+});

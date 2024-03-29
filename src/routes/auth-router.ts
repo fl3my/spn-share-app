@@ -26,4 +26,10 @@ authRouter.get("/logout", authController.logout);
 // Get: /auth/unauthorized
 authRouter.get("/unauthorized", authController.unauthorized);
 
+// GET: /auth/profile
+authRouter.get("/profile", authController.getProfile);
+
+// PATCH: /auth/profile
+authRouter.patch("/profile", authController.updateProfile);
+
 export { authRouter };
