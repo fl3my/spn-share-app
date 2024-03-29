@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { z } from "zod";
 
 import { Role } from "../models/enums";
-import passport from "../passport-config";
+import passport from "../configs/passport-config";
 import { DataStoreContext } from "../models/data-store-context";
 import { loginSchema, registerSchema } from "../schemas/auth-schemas";
 

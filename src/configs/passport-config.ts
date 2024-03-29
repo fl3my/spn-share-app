@@ -1,7 +1,7 @@
 import passport from "passport";
 import { Strategy as LocalStrategy } from "passport-local";
 
-import { dsContext } from "./models/data-store-context";
+import { dsContext } from "../models/data-store-context";
 
 // Get the user model instance
 // Create a local strategy

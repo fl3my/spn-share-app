@@ -10,7 +10,7 @@ import moment from "moment";
 // configure environment variables
 dotenv.config();
 
-import passport from "./passport-config";
+import passport from "./configs/passport-config";
 import { authRouter } from "./routes/auth-router";
 import { userRouter } from "./routes/user-router";
 import { ensureAdmin, ensureAuthenticated } from "./middleware/auth-middleware";

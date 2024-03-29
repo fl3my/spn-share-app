@@ -1,28 +1,14 @@
 import express from "express";
-import multer from "multer";
 
 import { DonationItemController } from "../controllers/donation-item-controller";
 import { dsContext } from "../models/data-store-context";
+import { createMulterUpload } from "../configs/multer-config";
 
 // Create a new router to handle /donation-items routes
 const donationItemRouter = express.Router();
 
-// Use memory storage so that the image can be saved after validation
-const storage = multer.memoryStorage();
-
 // Create a new multer upload object with the storage configuration
-const upload = multer({
-  storage: storage,
-  limits: { fileSize: 5 * 1024 * 1024 }, // Limit file size to 5MB
-  fileFilter: function (req, file, cb) {
-    // Only allow image MIME types
-    if (!file.mimetype.match(/\/(jpg|jpeg|png|gif)$/)) {
-      cb(new Error("Only image files are allowed!"));
-    } else {
-      cb(null, true);
-    }
-  },
-});
+const upload = createMulterUpload();
 
 const donationItemController = new DonationItemController(dsContext);
 
