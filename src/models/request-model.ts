@@ -6,7 +6,6 @@ import { DeliveryMethod, RequestStatus } from "./enums";
 interface Address {
   street: string;
   city: string;
-  county: string;
   postcode: string;
   coordinates: {
     latitude: number;
@@ -19,6 +18,10 @@ interface RequestDocument extends Document {
   userId: string;
   donationItemId: string;
   dateRequested: Date;
+  dateTimeRange: {
+    start: Date;
+    end: Date;
+  };
   deliveryMethod: DeliveryMethod;
   status: RequestStatus;
   address: Address;

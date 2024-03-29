@@ -36,7 +36,7 @@ export class RequestController {
       // Get the user for the request
       const user = await this.dsContext.user.findById(donationItem.userId);
 
-      res.render("request/show", { request, user });
+      res.render("request/show", { request, user, donationItem });
     } catch (error) {
       res.status(500).render("error", { error: error });
     }

@@ -5,7 +5,6 @@ import { engine } from "express-handlebars";
 import session from "express-session";
 import makeStore from "nedb-promises-session-store";
 import methodOverride from "method-override";
-import moment from "moment";
 
 // configure environment variables
 dotenv.config();
@@ -19,6 +18,7 @@ import { donationItemRouter } from "./routes/donation-item-router";
 import { shopRouter } from "./routes/shop-router";
 import { requestRouter } from "./routes/request-router";
 import { Role } from "./models/enums";
+import * as helpers from "./utils/handlebars-helpers";
 
 // Create an express application
 const app = express();
@@ -63,17 +63,7 @@ app.engine(
   ".hbs",
   engine({
     extname: ".hbs",
-    helpers: {
-      eq: function (v1: string, v2: string): boolean {
-        return v1 === v2;
-      },
-      formatDate: function (date: Date, format: string) {
-        return moment(date).format(format);
-      },
-      or: function (v1: boolean, v2: boolean): boolean {
-        return v1 || v2;
-      },
-    },
+    helpers: helpers,
   })
 );
 

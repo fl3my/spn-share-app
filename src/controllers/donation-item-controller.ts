@@ -415,7 +415,19 @@ export class DonationItemController {
       // Get the user for the request
       const user = await this.dsContext.user.findById(request.userId);
 
-      res.render("donation-items/requests/show", { request, user });
+      const donationItem = await this.dsContext.donationItem.findById(
+        request.donationItemId
+      );
+
+      if (!donationItem) {
+        throw new Error("Donation Item not found");
+      }
+
+      res.render("donation-items/requests/show", {
+        request,
+        user,
+        donationItem,
+      });
     } catch (error) {
       res.status(500).render("error", { error: error });
     }

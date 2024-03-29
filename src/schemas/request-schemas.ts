@@ -12,4 +12,31 @@ export const newRequestSchema = z.object({
   deliveryMethod: z.nativeEnum(DeliveryMethod),
   address: addressSchema,
   additionalNotes: z.string().optional(),
+  dateTimeRange: z
+    .object({
+      start: z.coerce.date(),
+      end: z.coerce.date(),
+    })
+    .refine(
+      ({ start, end }) => {
+        // Convert dates to YYYY-MM-DD format
+        const startDate = start.toISOString().split("T")[0];
+        const endDate = end.toISOString().split("T")[0];
+
+        // Check if the dates are the same
+        return startDate === endDate;
+      },
+      {
+        message: "Start and end dates must be on the same day",
+      }
+    )
+    .refine(
+      ({ start, end }) => {
+        // Check if the end date is after the start date
+        return end >= start;
+      },
+      {
+        message: "End date cannot be before start date",
+      }
+    ),
 });

@@ -21,7 +21,9 @@
               >{{this.donationItem.measurement.value}}
                 {{this.donationItem.measurement.type}}
                 {{this.donationItem.name}}</a></td>
-            <td>{{this.status}}</td>
+            <td><span
+                class="badge {{requestStatusColour this.status}}"
+              >{{this.status}}</span></td>
             <td>{{this.deliveryMethod}}</td>
             <td>
               <a href="/requests/{{this._id}}/cancel">Cancel</a>

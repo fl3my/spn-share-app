@@ -4,24 +4,48 @@
     href="/donation-items/{{request.donationItemId}}/requests"
     class="btn btn-primary mb-3"
   >Go back</a>
-  <h2>Request Information</h2>
-  <p>Date Requested: {{request.dateRequested}}</p>
-  <p>Request Status: {{request.status}}</p>
-  <p>Additional Notes: {{request.additionalNotes}}</p>
-  <p>Delivery Method: {{request.deliveryMethod}}</p>
 
-  <h2>Delivery Information</h2>
-  <p>Delivery Address: {{request.address.street}}</p>
-  <p>City: {{request.address.city}}</p>
-  <p>State: {{request.address.county}}</p>
-  <p>Zip Code: {{request.address.postcode}}</p>
+  <h2>Request Information</h2>
+  <p><strong>Date Requested:</strong> {{request.dateRequested}}</p>
+  <p><strong>Request Status:</strong> {{request.status}}</p>
+  <p><strong>Delivery Method:</strong> {{request.deliveryMethod}}</p>
+  <p><strong>Additional Notes:</strong> {{request.additionalNotes}}</p>
+
+  {{#if (eq request.deliveryMethod "COLLECT")}}
+    <h2>Collection Information</h2>
+    <p>The person who requested the donation from you can collect your donation
+      from the following location between these times.</p>
+    <p><strong>Collection Address:</strong>
+      {{donationItem.address.street}},
+      {{donationItem.address.city}},
+      {{donationItem.address.postcode}}</p>
+    <p><strong>Collection Time:</strong>
+      From
+      {{formatDate request.dateTimeRange.start "MMM Do YYYY, h:mm a"}}
+      to
+      {{formatDate request.dateTimeRange.end "MMM Do YYYY, h:mm a"}}</p>
+  {{/if}}
+
+  {{#if (eq request.deliveryMethod "RECIEVE")}}
+    <h2>Delivery Information</h2>
+    <p>The donation should be delivered to this location between these times.</p>
+    <p><strong>Delivery Address:</strong>
+      {{request.address.street}},
+      {{request.address.city}},
+      {{request.address.postcode}}</p>
+    <p><strong>Delivery Time:</strong>
+      From
+      {{formatDate request.dateTimeRange.start "MMM Do YYYY, h:mm a"}}
+      to
+      {{formatDate request.dateTimeRange.end "MMM Do YYYY, h:mm a"}}</p>
+  {{/if}}
 
   <h2>Requested by</h2>
-  <p>Requested by: {{user.firstname}} {{user.lastname}}</p>
-  <p>Email: {{user.email}}</p>
-  <p>Phone: {{user.mobile}}</p>
+  <p><strong>Name:</strong> {{user.firstname}} {{user.lastname}}</p>
+  <p><strong>Email:</strong> {{user.email}}</p>
+  <p><strong>Phone:</strong> {{user.mobile}}</p>
 
-  Do you want to accept this request?
+  <h2>Accept this request?</h2>
   <form
     id="acceptForm"
     action="/donation-items/{{request.donationItemId}}/requests/{{request._id}}/accept"
