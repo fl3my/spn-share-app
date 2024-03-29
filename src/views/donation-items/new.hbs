@@ -104,6 +104,19 @@
       </div>
     </div>
 
+    <h3>Item Location</h3>
+    <div class="mb-3">
+      <label for="streetName">Building Number and Street Name</label>
+      <input type="text" id="streetName" class="form-control" name="address[street]" value="{{donationItem.address.street}}" required />
+    </div>
+    <div class="mb-3">
+      <label for="city">Town or City</label>
+      <input type="text" id="city" class="form-control" name="address[city]" value="{{donationItem.address.city}}" required />
+    </div>
+    <div class="mb-3">
+      <label for="postcode">Postcode</label>
+      <input type="text" id="postcode" class="form-control" name="address[postcode]" value="{{donationItem.address.postcode}}" required />
+    </div>
     <button type="submit" class="btn btn-secondary">Submit</button>
   </form>
 

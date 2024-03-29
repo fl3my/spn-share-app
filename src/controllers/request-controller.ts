@@ -3,6 +3,8 @@ import { Request, Response } from "express";
 import { DeliveryMethod, DonationStatus, RequestStatus } from "../models/enums";
 import { DataStoreContext } from "../models/data-store-context";
 import { newRequestSchema } from "../schemas/request-schemas";
+import { geocodeAddress } from "../utils/geocode";
+import { calculateDistance } from "../utils/calculate-distance";
 
 export class RequestController {
   constructor(private dsContext: DataStoreContext) {}
@@ -57,15 +59,30 @@ export class RequestController {
       );
 
       // Find the item information for each request
-      const requestsWithItem = await Promise.all(
+      let requestsWithItem = await Promise.all(
         requests.map(async (request) => {
           // Find the donation item by ID
           const donationItem = await this.dsContext.donationItem.findById(
             request.donationItemId
           );
 
-          return { ...request, donationItem };
+          // Check if the donation item exists
+          if (!donationItem) {
+            throw new Error("Donation item not found");
+          }
+
+          const distance = calculateDistance(
+            request.address.coordinates,
+            donationItem.address.coordinates
+          );
+
+          return { ...request, donationItem, distance };
         })
+      );
+
+      // Sort the requests by distance
+      requestsWithItem = requestsWithItem.sort(
+        (a, b) => a.distance - b.distance
       );
 
       res.render("request/index", { requests: requestsWithItem });
@@ -122,12 +139,23 @@ export class RequestController {
         throw new Error("A request already exists for this donation item");
       }
 
+      // Get the user's request coordinates
+      const coordinates = await geocodeAddress(
+        newRequest.address.street,
+        newRequest.address.city,
+        newRequest.address.postcode
+      );
+
       // Insert the new request with additional properties
       await this.dsContext.request.insert({
         ...newRequest,
         userId: user.id,
         dateRequested: new Date(),
         status: RequestStatus.PENDING,
+        address: {
+          ...newRequest.address,
+          coordinates,
+        },
       });
 
       res.redirect("/requests");

@@ -8,6 +8,10 @@ interface Address {
   city: string;
   county: string;
   postcode: string;
+  coordinates: {
+    latitude: number;
+    longitude: number;
+  };
 }
 
 // Define the RequestDocument interface

@@ -78,7 +78,23 @@ export const dateInfoSchema = z
     }
   );
 
+const addressSchema = z.object({
+  street: z.string().min(2),
+  city: z.string().min(2),
+  postcode: z.string().min(2),
+});
+
 export const donationItemSchema = z.object({
+  name: z.string(),
+  description: z.string(),
+  storageRequirement: z.nativeEnum(StorageRequirement),
+  category: z.nativeEnum(Category),
+  measurement: measurementSchema,
+  dateInfo: dateInfoSchema,
+  address: addressSchema,
+});
+
+export const updateDonationItemSchema = z.object({
   name: z.string(),
   description: z.string(),
   storageRequirement: z.nativeEnum(StorageRequirement),

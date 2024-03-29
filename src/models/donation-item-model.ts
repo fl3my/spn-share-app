@@ -20,6 +20,17 @@ interface DateInfo {
   dateType: DateType;
   date: Date;
 }
+
+interface Address {
+  street: string;
+  city: string;
+  postcode: string;
+  coordinates: {
+    latitude: number;
+    longitude: number;
+  };
+}
+
 // Define an interface for the donation item document object
 interface DonationItemDocument extends Document {
   userId?: string;
@@ -32,6 +43,7 @@ interface DonationItemDocument extends Document {
   dateInfo: DateInfo;
   imageFilename: string;
   status: DonationStatus;
+  address: Address;
 }
 
 // This is the donation item model class that extends the base document model

@@ -10,7 +10,11 @@ import {
 } from "../models/enums";
 import { deleteImage, saveImage, updateImage } from "../utils/image-handler";
 import { DataStoreContext } from "../models/data-store-context";
-import { donationItemSchema } from "../schemas/donation-item-schemas";
+import {
+  donationItemSchema,
+  updateDonationItemSchema,
+} from "../schemas/donation-item-schemas";
+import { geocodeAddress } from "../utils/geocode";
 
 // Define a list of options for the form
 const formOptions = {
@@ -107,6 +111,15 @@ export class DonationItemController {
       // Save the image file and get the filename
       const filename = await saveImage(req.file);
 
+      // Get the coordinates of the address
+      const coordinates = await geocodeAddress(
+        newDonationItem.address.street,
+        newDonationItem.address.city,
+        newDonationItem.address.postcode
+      );
+
+      console.log("Coordinates: ", coordinates);
+
       // Create a new donation item document with missing fields
       const donationItemDocument = {
         ...newDonationItem,
@@ -114,6 +127,10 @@ export class DonationItemController {
         dateCreated: new Date(),
         imageFilename: filename,
         status: DonationStatus.AVAILABLE,
+        address: {
+          ...newDonationItem.address,
+          coordinates,
+        },
       };
 
       // Insert the new donation item
@@ -178,7 +195,7 @@ export class DonationItemController {
       imageFilename = currentDonationItem.imageFilename;
 
       // Validate the request body
-      const updatedDonationItem = donationItemSchema.parse(req.body);
+      const updatedDonationItem = updateDonationItemSchema.parse(req.body);
 
       // Check if a new image file is provided
       if (req.file) {
