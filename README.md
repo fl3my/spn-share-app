@@ -6,18 +6,20 @@ Coursework 2 for GCU Web App Development 2.
 
 ```mermaid
     erDiagram
-    USER ||--o{ DONATIONITEM : "creates"
-    USER {
+    User ||--o{ DonationItem : "creates"
+    User {
         string _id
         string email
         string password
         string firstname
         string lastname
+        string phoneNumber
         string role
     }
-    DONATIONITEM ||--|| MEASUREMENT : has
-    DONATIONITEM ||--|| DATEINFO : has
-    DONATIONITEM {
+    DonationItem ||--|| Measurement : has
+    DonationItem ||--|| DateInfo : has
+    DonationItem ||--|| Address : has
+    DonationItem {
         string userId
         string name
         string description
@@ -25,18 +27,22 @@ Coursework 2 for GCU Web App Development 2.
         Category category
         date dateCreated
         string imageFilename
+        DonationStatus status
     }
-    MEASUREMENT {
+    Measurement {
         MeasurementType type
         number value
     }
-    DATEINFO {
+    DateInfo {
         DateType dateType
         date date
     }
-    USER ||--o{ Request : "requests"
-    DONATIONITEM ||--o{ Request : "requested in"
-    Request ||--o{ Address : has
+    User ||--o{ Request : "requests"
+    DonationItem ||--o{ Request : "requested in"
+    Request ||--|| Address : has
+    Address ||--|| Coordinates : has
+    Request ||--|| DateTimeRange : has
+
     Request {
         string userId
         string donationItemId
@@ -47,7 +53,14 @@ Coursework 2 for GCU Web App Development 2.
     Address {
         string street
         string city
-        string county
         string postcode
+    }
+    Coordinates {
+        float latitiude
+        float longitude
+    }
+    DateTimeRange {
+        date start
+        date end
     }
 ```

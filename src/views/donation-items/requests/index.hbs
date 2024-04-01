@@ -19,7 +19,9 @@
             <td>{{formatDate this.dateRequested "DD MM YYYY"}}</td>
             <td>{{this.user.email}}</td>
             <td>{{this.distance}} km</td>
-            <td>{{this.status}}</td>
+            <td><span
+                class="badge {{requestStatusColour this.status}}"
+              >{{this.status}}</span></td>
             <td>{{this.deliveryMethod}}</td>
             <td>
               <a href="requests/{{this._id}}" class="btn btn-primary">View</a>
