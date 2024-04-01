@@ -1,0 +1,32 @@
+<div class="rounded bg-light shadow p-3 mt-4">
+  <h1>Contacts</h1>
+  {{#if contacts}}
+
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Message</th>
+          <th>Sent At</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each contacts}}
+          <tr>
+            <td>{{this.name}}</td>
+            <td>{{this.email}}</td>
+            <td>{{this.message}}</td>
+            <td>{{formatDate this.sentAt "MMMM Do YYYY, h:mm:ss a"}}</td>
+            <td><a href="/contacts/{{this._id}}">Show</a></td>
+          </tr>
+        {{/each}}
+      </tbody>
+    </table>
+
+  {{else}}
+    <p>No contacts found</p>
+  {{/if}}
+
+</div>

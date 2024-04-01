@@ -1,0 +1,57 @@
+<div class="min-vh-100 d-flex justify-content-center align-items-start">
+  <div class="col-12 col-md-6 col-lg-4">
+    <div class="rounded p-4 bg-light shadow my-3">
+      {{#if success}}
+        <p>{{success.message}}</p>
+      {{/if}}
+
+      <form action="/contacts" method="POST">
+        <h1>Contact us</h1>
+        <div class="mt-4">
+          <label for="name" class="form-label">Name</label>
+          <input
+            type="text"
+            class="form-control"
+            id="name"
+            name="name"
+            placeholder="Your Name"
+            required
+          />
+        </div>
+        <div class="mt-4">
+          <label for="email" class="form-label">Email</label>
+          <input
+            type="email"
+            class="form-control"
+            id="email"
+            name="email"
+            placeholder="Email Address"
+            required
+          />
+        </div>
+        <div class="mt-4">
+          <label for="message" class="form-label">Message</label>
+          <textarea
+            class="form-control"
+            id="message"
+            name="message"
+            placeholder="Your message"
+            required
+          ></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100 mt-4">Send</button>
+      </form>
+
+      {{#if errors}}
+        <ul class="list-unstyled">
+          {{#each errors}}
+            <div class="alert alert-danger" role="alert">
+              {{this.message}}
+            </div>
+          {{/each}}
+        </ul>
+      {{/if}}
+    </div>
+  </div>
+</div>

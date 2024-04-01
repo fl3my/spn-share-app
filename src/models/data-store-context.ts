@@ -3,6 +3,7 @@ import DataStore from "@seald-io/nedb";
 import { DonationItemModel } from "./donation-item-model";
 import { UserModel } from "./user-model";
 import { RequestModel } from "./request-model";
+import { ContactModel } from "./contact-model";
 
 /**
  * DataStore context class that holds all the models in the application.
@@ -12,6 +13,7 @@ export class DataStoreContext {
   public user: UserModel;
   public donationItem: DonationItemModel;
   public request: RequestModel;
+  public contact: ContactModel;
 
   constructor() {
     const userDb = new DataStore({ filename: "data/users.db", autoload: true });
@@ -28,6 +30,12 @@ export class DataStoreContext {
       autoload: true,
     });
     this.request = new RequestModel(requestDb);
+
+    const contactDb = new DataStore({
+      filename: "data/contacts.db",
+      autoload: true,
+    });
+    this.contact = new ContactModel(contactDb);
   }
 }
 

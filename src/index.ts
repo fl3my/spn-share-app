@@ -19,6 +19,7 @@ import { shopRouter } from "./routes/shop-router";
 import { requestRouter } from "./routes/request-router";
 import { Role } from "./models/enums";
 import * as helpers from "./utils/handlebars-helpers";
+import { contactRouter } from "./routes/contact-router";
 
 // Create an express application
 const app = express();
@@ -82,6 +83,7 @@ app.use(
 );
 app.use("/shop", ensureInRole(Role.PANTRY), shopRouter);
 app.use("/requests", ensureInRoles([Role.DONATOR, Role.PANTRY]), requestRouter);
+app.use("/contacts", contactRouter);
 
 app.get("/", (req, res) => {
   res.render("home");
