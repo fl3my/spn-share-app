@@ -1,3 +1,4 @@
+// External modules
 import express from "express";
 import dotenv from "dotenv";
 import morgan from "morgan";
@@ -6,20 +7,29 @@ import session from "express-session";
 import makeStore from "nedb-promises-session-store";
 import methodOverride from "method-override";
 
-// configure environment variables
+// Configurations
 dotenv.config();
-
 import passport from "./configs/passport-config";
-import { authRouter } from "./routes/auth-router";
-import { userRouter } from "./routes/user-router";
-import { ensureInRole, ensureInRoles } from "./middleware/auth-middleware";
-import { homeRouter } from "./routes/home-router";
-import { donationItemRouter } from "./routes/donation-item-router";
-import { shopRouter } from "./routes/shop-router";
-import { requestRouter } from "./routes/request-router";
-import { Role } from "./models/enums";
+
+// Utils
 import * as helpers from "./utils/handlebars-helpers";
-import { contactRouter } from "./routes/contact-router";
+
+// Routes
+import {
+  authRouter,
+  contactRouter,
+  donationItemRouter,
+  homeRouter,
+  requestRouter,
+  shopRouter,
+  userRouter,
+} from "./routes";
+
+// Middleware
+import { ensureInRole, ensureInRoles } from "./middleware/auth-middleware";
+
+// Models
+import { Role } from "./models/enums";
 
 // Create an express application
 const app = express();
