@@ -462,11 +462,11 @@ export class DonationItemController {
         throw new Error("No user ID found");
       }
 
-      // Accept the request
-      await this.dsContext.request.acceptRequest(requestId);
-
       // Accept the donation
       await this.dsContext.donationItem.acceptDonationItem(donationItemId);
+
+      // Accept the request
+      await this.dsContext.request.acceptRequest(requestId);
 
       // Redirect to the donation item requests page
       res.redirect(`/donation-items/${donationItemId}/requests`);
