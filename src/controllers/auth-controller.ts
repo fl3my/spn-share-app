@@ -9,6 +9,7 @@ import {
   profileSchema,
   registerSchema,
 } from "../schemas/auth-schemas";
+import { geocodeAddress } from "../utils/geocode";
 
 export class AuthController {
   constructor(private dsContext: DataStoreContext) {}
@@ -74,7 +75,10 @@ export class AuthController {
       const validatedRegister = registerSchema.parse(req.body);
 
       // Add the role of DONATOR to the user
-      const userWithRole = { ...validatedRegister, role: Role.DONATOR };
+      const userWithRole = {
+        ...validatedRegister,
+        role: Role.DONATOR,
+      };
 
       // Register the user
       await this.dsContext.user.registerUser(userWithRole);
@@ -143,11 +147,24 @@ export class AuthController {
         return res.status(403).render("auth/unauthorized");
       }
 
-      // Update the user
-      await this.dsContext.user.update(updatedUser._id, updatedUser);
+      // Geocode the address
+      const coordinates = await geocodeAddress(
+        updatedUser.address.street,
+        updatedUser.address.city,
+        updatedUser.address.postcode
+      );
 
-      // Redirect to the users page
-      res.redirect("/");
+      // Update the user with new coordinates
+      const newUser = await this.dsContext.user.update(updatedUser._id, {
+        ...updatedUser,
+        address: { ...updatedUser.address, coordinates },
+      });
+
+      // Redirect to the profile page with success message
+      res.render("auth/profile", {
+        user: newUser,
+        success: "Profile successfully updated!",
+      });
     } catch (error) {
       const _id = req.body._id;
       if (error instanceof z.ZodError) {

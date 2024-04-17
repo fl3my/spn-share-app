@@ -3,6 +3,7 @@ import { z } from "zod";
 
 import { DataStoreContext } from "../models/data-store-context";
 import { newUserSchema, updatedUserSchema } from "../schemas/user-schemas";
+import { geocodeAddress } from "../utils/geocode";
 
 export class UserController {
   constructor(private modelProvider: DataStoreContext) {}
@@ -23,8 +24,18 @@ export class UserController {
       // Validate the request body
       const newUser = newUserSchema.parse(req.body);
 
+      // Get the coordinates of a new user's address
+      const coordinates = await geocodeAddress(
+        newUser.address.street,
+        newUser.address.city,
+        newUser.address.postcode
+      );
+
       // Insert the new user
-      await this.modelProvider.user.registerUser(newUser);
+      await this.modelProvider.user.registerUser({
+        ...newUser,
+        address: { ...newUser.address, coordinates },
+      });
 
       // Redirect to the users page
       res.redirect("/users");
@@ -63,8 +74,17 @@ export class UserController {
       // Validate the request body
       const updatedUser = updatedUserSchema.parse(req.body);
 
+      const coordinates = await geocodeAddress(
+        updatedUser.address.street,
+        updatedUser.address.city,
+        updatedUser.address.postcode
+      );
+
       // Update the user
-      await this.modelProvider.user.update(req.params.id, updatedUser);
+      await this.modelProvider.user.update(req.params.id, {
+        ...updatedUser,
+        address: { ...updatedUser.address, coordinates },
+      });
 
       // Redirect to the users page
       res.redirect("/users");

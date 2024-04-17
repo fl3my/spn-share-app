@@ -40,7 +40,27 @@
     <option value="DONATOR" {{#if (eq user.role 'DONATOR')}}selected{{/if}}>Donator</option>
     <option value="PANTRY" {{#if (eq user.role 'PANTRY')}}selected{{/if}}>Pantry</option>
     <option value="ADMIN" {{#if (eq user.role 'ADMIN')}}selected{{/if}}>Admin</option>
+    <option value="WAREHOUSE" {{#if (eq user.role 'WAREHOUSE')}}selected{{/if}}>Warehouse</option>
   </select>
+
+  <div class="form-group mb-3">
+    <label for="streetName">Building Number and Street Name</label>
+    <input type="text" class="form-control" name="address[street]" value="{{user.address.street}}" required />
+  </div>
+  <div class="form-groupmb-3">
+    <label for="city">Town or City</label>
+    <input type="text" class="form-control" name="address[city]" value="{{user.address.city}}" required />
+  </div>
+  <div class="form-group mb-3">
+    <label for="postcode">Postcode</label>
+    <input
+      type="text"
+      class="form-control"
+      name="address[postcode]"
+      value="{{user.address.postcode}}"
+      required
+    />
+  </div>
 
   <label for="email" class="form-label">Email</label><br />
   <input

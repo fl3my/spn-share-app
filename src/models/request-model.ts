@@ -7,7 +7,7 @@ interface Address {
   street: string;
   city: string;
   postcode: string;
-  coordinates: {
+  coordinates?: {
     latitude: number;
     longitude: number;
   };
@@ -18,10 +18,7 @@ interface RequestDocument extends Document {
   userId: string;
   donationItemId: string;
   dateRequested: Date;
-  dateTimeRange: {
-    start: Date;
-    end: Date;
-  };
+  additionalNotes: string;
   deliveryMethod: DeliveryMethod;
   status: RequestStatus;
   address: Address;
@@ -91,7 +88,10 @@ export class RequestModel extends DocumentModel<RequestDocument> {
       }
 
       // Check if the request is already accepted
-      if (request.status === RequestStatus.ACCEPTED) {
+      if (
+        request.status === RequestStatus.ACCEPTED ||
+        request.status === RequestStatus.COMPLETED
+      ) {
         throw new Error("Request already accepted");
       }
 

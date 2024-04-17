@@ -18,4 +18,9 @@ export const profileSchema = z.object({
   firstname: z.string().min(2),
   lastname: z.string().min(2),
   mobile: z.string().min(10),
+  address: z.object({
+    street: z.string().min(2),
+    city: z.string().min(2),
+    postcode: z.string().min(2),
+  }),
 });

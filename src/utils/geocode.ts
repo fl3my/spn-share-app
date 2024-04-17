@@ -11,7 +11,7 @@ export const geocodeAddress = async (
   const response = await fetch(
     `https://api.tomtom.com/search/2/geocode/${encodeURIComponent(
       address
-    )}.json?key=${process.env.TOMTOM_API_KEY}`
+    )}.json?key=${process.env.TOMTOM_API_KEY}&countrySet=GB&limit=1`
   );
 
   // Check if the response is ok

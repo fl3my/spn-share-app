@@ -4,8 +4,11 @@ import { z } from "zod";
 import {
   Category,
   DateType,
+  DeliveryMethod,
   DonationStatus,
   MeasurementType,
+  RequestStatus,
+  Role,
   StorageRequirement,
 } from "../models/enums";
 import { deleteImage, saveImage, updateImage } from "../utils/image-handler";
@@ -119,8 +122,6 @@ export class DonationItemController {
         newDonationItem.address.postcode
       );
 
-      console.log("Coordinates: ", coordinates);
-
       // Create a new donation item document with missing fields
       const donationItemDocument = {
         ...newDonationItem,
@@ -135,7 +136,44 @@ export class DonationItemController {
       };
 
       // Insert the new donation item
-      await this.dsContext.donationItem.insert(donationItemDocument);
+      const donationItem = await this.dsContext.donationItem.insert(
+        donationItemDocument
+      );
+
+      // When the donation Item is created, all warehouse users should automatically request
+      const warehouseUsers = await this.dsContext.user.findUsersByRole(
+        Role.WAREHOUSE
+      );
+
+      if (warehouseUsers) {
+        await Promise.all(
+          warehouseUsers.map(async (warehouseUser) => {
+            if (!warehouseUser._id) {
+              throw new Error("User ID is required");
+            }
+
+            if (!donationItem._id) {
+              throw new Error("Donation Item ID is required");
+            }
+
+            if (!warehouseUser.address) {
+              throw new Error("Warehouse user address is required");
+            }
+
+            // Create a new request
+            await this.dsContext.request.insert({
+              userId: warehouseUser._id,
+              donationItemId: donationItem._id,
+              status: RequestStatus.PENDING,
+              dateRequested: new Date(),
+              deliveryMethod: DeliveryMethod.RECIEVE,
+              address: warehouseUser.address,
+              additionalNotes:
+                "This was automatically requested by the warehouse.",
+            });
+          })
+        );
+      }
 
       // Redirect to the donation items page
       res.redirect("/donation-items");
@@ -345,10 +383,14 @@ export class DonationItemController {
             throw new Error("Donation Item not found");
           }
 
-          const distance = calculateDistance(
-            request.address.coordinates,
-            donationItem.address.coordinates
-          );
+          let distance = 0;
+
+          if (request.address.coordinates) {
+            distance = calculateDistance(
+              request.address.coordinates,
+              donationItem.address.coordinates
+            );
+          }
 
           return {
             ...request,

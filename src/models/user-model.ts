@@ -11,6 +11,15 @@ interface UserDocument extends Document {
   firstname: string;
   lastname: string;
   role: Role;
+  address?: {
+    street: string;
+    city: string;
+    postcode: string;
+    coordinates?: {
+      latitude: number;
+      longitude: number;
+    };
+  };
 }
 
 // This is the user model class that extends the base document model
@@ -40,6 +49,15 @@ export class UserModel extends DocumentModel<UserDocument> {
       return await this.db.findOneAsync({ email });
     } catch (error) {
       console.error("Error finding user by email: ", error);
+      throw error;
+    }
+  }
+
+  async findUsersByRole(role: Role): Promise<UserDocument[]> {
+    try {
+      return await this.db.findAsync({ role });
+    } catch (error) {
+      console.error("Error finding users by role: ", error);
       throw error;
     }
   }

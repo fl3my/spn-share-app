@@ -3,6 +3,7 @@ export enum Role {
   DONATOR = "DONATOR",
   PANTRY = "PANTRY",
   ADMIN = "ADMIN",
+  WAREHOUSE = "WAREHOUSE",
 }
 
 // Define the measurement types

@@ -92,7 +92,11 @@ app.use(
   donationItemRouter
 );
 app.use("/shop", ensureInRole(Role.PANTRY), shopRouter);
-app.use("/requests", ensureInRoles([Role.DONATOR, Role.PANTRY]), requestRouter);
+app.use(
+  "/requests",
+  ensureInRoles([Role.DONATOR, Role.PANTRY, Role.WAREHOUSE]),
+  requestRouter
+);
 app.use("/contacts", contactRouter);
 
 app.get("/", (req, res) => {

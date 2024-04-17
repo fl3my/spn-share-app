@@ -20,11 +20,6 @@
       {{donationItem.address.street}},
       {{donationItem.address.city}},
       {{donationItem.address.postcode}}</p>
-    <p><strong>Collection Time:</strong>
-      From
-      {{formatDate request.dateTimeRange.start "MMM Do YYYY, h:mm a"}}
-      to
-      {{formatDate request.dateTimeRange.end "MMM Do YYYY, h:mm a"}}</p>
 
     Has this item been collected?
   {{/if}}
@@ -37,11 +32,6 @@
       {{request.address.street}},
       {{request.address.city}},
       {{request.address.postcode}}</p>
-    <p><strong>Delivery Time:</strong>
-      From
-      {{formatDate request.dateTimeRange.start "MMM Do YYYY, h:mm a"}}
-      to
-      {{formatDate request.dateTimeRange.end "MMM Do YYYY, h:mm a"}}</p>
 
     Has this item been delivered?
   {{/if}}

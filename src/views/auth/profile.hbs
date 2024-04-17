@@ -1,5 +1,10 @@
 <h1 class="mt-3">Profile</h1>
 <div class="rounded p-3 bg-light shadow">
+  {{#if success}}
+    <div class="alert alert-success" role="alert">
+      {{success}}
+    </div>
+  {{/if}}
   <form action="/auth/profile?_method=PATCH" method="post">
     <input type="hidden" name="_id" value="{{user._id}}" />
     <h3>Your Details</h3>
@@ -40,6 +45,38 @@
         value="{{user.mobile}}"
       />
     </div>
+
+    <div class="form-group mb-3">
+      <label for="streetName">Building Number and Street Name</label>
+      <input
+        type="text"
+        class="form-control"
+        name="address[street]"
+        value="{{user.address.street}}"
+        required
+      />
+    </div>
+    <div class="form-groupmb-3">
+      <label for="city">Town or City</label>
+      <input
+        type="text"
+        class="form-control"
+        name="address[city]"
+        value="{{user.address.city}}"
+        required
+      />
+    </div>
+    <div class="form-group mb-3">
+      <label for="postcode">Postcode</label>
+      <input
+        type="text"
+        class="form-control"
+        name="address[postcode]"
+        value="{{user.address.postcode}}"
+        required
+      />
+    </div>
+
     <input type="submit" value="Update" class="btn btn-primary mt-3" />
   </form>
 
