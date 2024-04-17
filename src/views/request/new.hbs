@@ -20,15 +20,15 @@
     <h3>Your address</h3>
       <div class="form-group mb-3">
         <label for="streetName">Building Number and Street Name</label>
-        <input type="text" class="form-control" name="address[street]" required />
+        <input type="text" class="form-control" name="address[street]" value="{{request.address.street}}" required />
       </div>
       <div class="form-groupmb-3">
         <label for="city">Town or City</label>
-        <input type="text" class="form-control" name="address[city]" required />
+        <input type="text" class="form-control" name="address[city]" value="{{request.address.city}}" required />
       </div>
       <div class="form-group mb-3">
         <label for="postcode">Postcode</label>
-        <input type="text" class="form-control" name="address[postcode]" required />
+        <input type="text" class="form-control" name="address[postcode]" value="{{request.address.postcode}}" required />
       </div>
     <div class="form-group mb-3">
       <label for="additionalNotes">Additional Notes</label>

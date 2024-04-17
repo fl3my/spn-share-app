@@ -88,7 +88,7 @@ app.use("/auth", authRouter);
 app.use("/users", ensureInRole(Role.ADMIN), userRouter);
 app.use(
   "/donation-items",
-  ensureInRoles([Role.DONATOR, Role.PANTRY]),
+  ensureInRoles([Role.DONATOR, Role.PANTRY, Role.ADMIN]),
   donationItemRouter
 );
 app.use("/shop", ensureInRole(Role.PANTRY), shopRouter);

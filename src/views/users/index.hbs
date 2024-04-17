@@ -5,6 +5,7 @@
       <thead>
         <tr>
           <th>Email</th>
+          <th>Role</th>
           <th>Actions</th>
         </tr>
       </thead>
@@ -12,6 +13,7 @@
         {{#each users}}
           <tr>
             <td>{{this.email}}</td>
+            <td>{{this.role}}</td>
             <td>
               <a href="/users/{{this._id}}/edit">Edit</a>
               <a href="/users/{{this._id}}/delete">Delete</a>

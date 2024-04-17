@@ -101,7 +101,26 @@ export class RequestController {
       // Get the delivery options to return to view
       const deliveryOptions = Object.values(DeliveryMethod);
 
-      res.render("request/new", { donationItem, deliveryOptions });
+      if (!req.user) {
+        throw new Error("User ID is required");
+      }
+
+      const user = await this.dsContext.user.findById(req.user.id);
+
+      if (!user) {
+        throw new Error("User not found");
+      }
+
+      // Prefill address with users details
+      const request = {
+        address: {
+          street: user.address?.street,
+          city: user.address?.city,
+          postcode: user.address?.postcode,
+        },
+      };
+
+      res.render("request/new", { donationItem, deliveryOptions, request });
     } catch (error) {
       res.render("error", { error });
     }
@@ -141,6 +160,7 @@ export class RequestController {
         userId: user.id,
         dateRequested: new Date(),
         status: RequestStatus.PENDING,
+        additionalNotes: newRequest.additionalNotes || "",
         address: {
           ...newRequest.address,
           coordinates,

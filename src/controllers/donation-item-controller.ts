@@ -48,9 +48,17 @@ export class DonationItemController {
         throw new Error("No user ID found in request");
       }
 
-      // Get all donation items by user ID
-      const donationItems =
-        await this.dsContext.donationItem.findDonationItemsByUserId(user.id);
+      let donationItems = [];
+
+      // Check if the user is an admin and get all donation items
+      if (user.role === Role.ADMIN) {
+        // Get all donation items by user ID
+        donationItems = await this.dsContext.donationItem.findAll();
+      } else {
+        // Get all donation items by user ID
+        donationItems =
+          await this.dsContext.donationItem.findDonationItemsByUserId(user.id);
+      }
 
       // If there are donation items
       if (donationItems) {
@@ -63,6 +71,14 @@ export class DonationItemController {
               throw new Error("Donation Item ID is required");
             }
 
+            if (!donationItem.userId) {
+              throw new Error("User ID is required");
+            }
+
+            const donationItemUser = await this.dsContext.user.findById(
+              donationItem.userId
+            );
+
             // Get the donation item by ID
             const requestCount =
               await this.dsContext.request.getRequestCountByDonationItemId(
@@ -71,6 +87,7 @@ export class DonationItemController {
             return {
               ...donationItem,
               requestCount,
+              email: donationItemUser?.email,
             };
           })
         );
@@ -90,7 +107,31 @@ export class DonationItemController {
 
   // Get the form to create a new donation item
   getNewDonationItemForm = async (req: Request, res: Response) => {
-    res.render("donation-items/new", { formOptions });
+    try {
+      if (!req.user) {
+        throw new Error("No user ID found in request");
+      }
+      // Get the user by ID
+      const user = await this.dsContext.user.findById(req.user.id);
+
+      if (!user) {
+        throw new Error("User not found");
+      }
+
+      // Prefill the address fields with the user's address
+      const donationItem = {
+        address: {
+          street: user.address?.street,
+          city: user.address?.city,
+          postcode: user.address?.postcode,
+        },
+      };
+
+      // Render the new donation item form with address prefilled
+      res.render("donation-items/new", { formOptions, donationItem });
+    } catch (error) {
+      res.status(500).render("error", { error: error });
+    }
   };
 
   // Create a new donation item
@@ -398,11 +439,6 @@ export class DonationItemController {
             distance,
           };
         })
-      );
-
-      // Sort the requests by distance
-      requestsWithUser = requestsWithUser.sort(
-        (a, b) => a.distance - b.distance
       );
 
       res.render("donation-items/requests/index", {

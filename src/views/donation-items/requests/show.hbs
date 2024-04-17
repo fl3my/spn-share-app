@@ -13,31 +13,19 @@
 
   {{#if (eq request.deliveryMethod "COLLECT")}}
     <h2>Collection Information</h2>
-    <p>The person who requested the donation from you can collect your donation
-      from the following location between these times.</p>
     <p><strong>Collection Address:</strong>
       {{donationItem.address.street}},
       {{donationItem.address.city}},
       {{donationItem.address.postcode}}</p>
-    <p><strong>Collection Time:</strong>
-      From
-      {{formatDate request.dateTimeRange.start "MMM Do YYYY, h:mm a"}}
-      to
-      {{formatDate request.dateTimeRange.end "MMM Do YYYY, h:mm a"}}</p>
+
   {{/if}}
 
   {{#if (eq request.deliveryMethod "RECIEVE")}}
     <h2>Delivery Information</h2>
-    <p>The donation should be delivered to this location between these times.</p>
     <p><strong>Delivery Address:</strong>
       {{request.address.street}},
       {{request.address.city}},
       {{request.address.postcode}}</p>
-    <p><strong>Delivery Time:</strong>
-      From
-      {{formatDate request.dateTimeRange.start "MMM Do YYYY, h:mm a"}}
-      to
-      {{formatDate request.dateTimeRange.end "MMM Do YYYY, h:mm a"}}</p>
   {{/if}}
 
   <h2>Requested by</h2>

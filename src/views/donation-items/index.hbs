@@ -1,10 +1,11 @@
-<h1 class="mt-3">Your donation items</h1>
+<h1 class="mt-3">All donation items</h1>
 <div class="p-3 bg-light rounded shadow">
   {{#if donationItems}}
     <table class="table table-light table-striped">
       <thead>
         <tr>
-          <th>Name</th>
+          <th>Email</th>
+          <th>Item Name</th>
           <th>Status</th>
           <th>Actions</th>
           <th>Requests</th>
@@ -13,6 +14,7 @@
       <tbody>
         {{#each donationItems}}
           <tr>
+            <td>{{this.email}}</td>
             <td>{{this.name}}</td>
             <td><span
                 class="badge {{donationStatusColour this.status}}"
