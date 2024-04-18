@@ -3,14 +3,17 @@ import { DonationItemDocument } from "../models/donation-item-model";
 import {
   Category,
   DateType,
+  DeliveryMethod,
   DonationStatus,
   MeasurementType,
+  RequestStatus,
   Role,
   StorageRequirement,
 } from "../models/enums";
 import { UserDocument } from "../models/user-model";
 import argon2 from "argon2";
 import dotenv from "dotenv";
+import { RequestDocument } from "../models/request-model";
 
 // Load environment variables
 dotenv.config();
@@ -307,9 +310,44 @@ const insertDonationItems = async () => {
   }
 };
 
+// Insert seed data for requests
+const insertRequests = async () => {
+  const requests: RequestDocument[] = [];
+
+  // Create the automatic requests for the warehouse
+  for (let i = 0; i < 6; i++) {
+    requests.push({
+      userId: "c",
+      donationItemId: String.fromCharCode(97 + i),
+      status: RequestStatus.PENDING,
+      dateRequested: new Date(),
+      deliveryMethod: DeliveryMethod.RECIEVE,
+      address: {
+        street: "150 Albert Dr",
+        city: "Glasgow",
+        postcode: "G41 2NG",
+        coordinates: {
+          latitude: 55.851961,
+          longitude: -4.27077,
+        },
+      },
+      additionalNotes: "This was automatically requested by the warehouse.",
+    });
+  }
+
+  try {
+    await Promise.all(
+      requests.map((request) => dsContext.request.insert(request))
+    );
+  } catch (error) {
+    console.log("error inserting request:", error);
+  }
+};
+
 const seed = async () => {
   await insertUsers();
   await insertDonationItems();
+  await insertRequests();
 };
 
 seed().catch(console.error);

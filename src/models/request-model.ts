@@ -14,7 +14,7 @@ interface Address {
 }
 
 // Define the RequestDocument interface
-interface RequestDocument extends Document {
+export interface RequestDocument extends Document {
   userId: string;
   donationItemId: string;
   dateRequested: Date;
