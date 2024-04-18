@@ -5,7 +5,7 @@ import { DocumentModel, Document } from "./document-model";
 import { Role } from "./enums";
 
 // Define an inteface for the user document object
-interface UserDocument extends Document {
+export interface UserDocument extends Document {
   email: string;
   password: string;
   firstname: string;

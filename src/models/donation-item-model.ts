@@ -32,7 +32,7 @@ interface Address {
 }
 
 // Define an interface for the donation item document object
-interface DonationItemDocument extends Document {
+export interface DonationItemDocument extends Document {
   userId?: string;
   name: string;
   description: string;

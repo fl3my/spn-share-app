@@ -133,7 +133,10 @@ dist
 data
 
 # Contents of uploads directory
-uploads
+/public/uploads/*
+
+# Ignore everything that isnt a seed image
+!/public/uploads/seed-*.jpg
 
 # Compiled scss files
 public/css
