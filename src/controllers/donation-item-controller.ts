@@ -248,6 +248,24 @@ export class DonationItemController {
       req.params.id
     );
 
+    if (!req.user) {
+      return res.status(403).render("error", {
+        error: new Error("You are not authorized to edit this donation item"),
+      });
+    }
+
+    if (!donationItem) {
+      return res
+        .status(404)
+        .render("error", { error: "Donation Item not found" });
+    }
+
+    if (req.user.id !== donationItem.userId && req.user.role !== Role.ADMIN) {
+      return res.status(403).render("error", {
+        error: new Error("You are not authorized to edit this donation item"),
+      });
+    }
+
     res.render("donation-items/edit", { donationItem, formOptions });
   };
 
@@ -269,6 +287,19 @@ export class DonationItemController {
 
       if (!currentDonationItem) {
         throw new Error("Donation Item not found");
+      }
+
+      // Check if the user ID is provided
+      if (!req.user) {
+        throw new Error("No user ID found in request");
+      }
+
+      // Check if the user is authorized to edit the donation item
+      if (
+        req.user.id !== currentDonationItem.userId &&
+        req.user.role !== Role.ADMIN
+      ) {
+        throw new Error("You are not authorized to edit this donation item");
       }
 
       // Set the current image filename to pass back to view
@@ -401,6 +432,18 @@ export class DonationItemController {
         throw new Error("No user ID found");
       }
 
+      const donationItem = await this.dsContext.donationItem.findById(
+        donationItemId
+      );
+
+      if (!donationItem) {
+        throw new Error("Donation Item not found");
+      }
+
+      if (req.user.id !== donationItem.userId && req.user.role !== "ADMIN") {
+        throw new Error("User is not authorised to view this page");
+      }
+
       // Get the donation item by ID
       const requests =
         await this.dsContext.request.findRequestsByDonationItemId(
@@ -488,6 +531,15 @@ export class DonationItemController {
 
       if (!request) {
         throw new Error("Request not found");
+      }
+
+      if (!req.user) {
+        throw new Error("No user ID found");
+      }
+
+      // Check if the user is authorised to view the request
+      if (request.userId !== req.user.id && req.user.role !== Role.ADMIN) {
+        throw new Error("User is not authorised to view this request");
       }
 
       // Get the user for the request

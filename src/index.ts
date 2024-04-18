@@ -19,7 +19,6 @@ import {
   authRouter,
   contactRouter,
   donationItemRouter,
-  homeRouter,
   requestRouter,
   shopRouter,
   userRouter,
@@ -83,7 +82,6 @@ app.set("view engine", ".hbs");
 app.set("views", "src/views");
 
 // Define the routes
-app.use("/", homeRouter);
 app.use("/auth", authRouter);
 app.use("/users", ensureInRole(Role.ADMIN), userRouter);
 app.use(
@@ -99,8 +97,17 @@ app.use(
 );
 app.use("/contacts", contactRouter);
 
+app.get("/about", (req, res) => {
+  res.render("about");
+});
+
 app.get("/", (req, res) => {
   res.render("home");
+});
+
+// Catch-all route
+app.use("*", (req, res) => {
+  res.status(404).render("404");
 });
 
 // Start the express server

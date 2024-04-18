@@ -1,6 +1,11 @@
 import { Request, Response } from "express";
 
-import { DeliveryMethod, DonationStatus, RequestStatus } from "../models/enums";
+import {
+  DeliveryMethod,
+  DonationStatus,
+  RequestStatus,
+  Role,
+} from "../models/enums";
 import { DataStoreContext } from "../models/data-store-context";
 import { newRequestSchema } from "../schemas/request-schemas";
 import { geocodeAddress } from "../utils/geocode";
@@ -31,6 +36,15 @@ export class RequestController {
       // Check if the donation item exists
       if (!donationItem || !donationItem.userId) {
         throw new Error("Request not found");
+      }
+
+      if (!req.user) {
+        throw new Error("User ID is required");
+      }
+
+      // Check if the user is authorised to view the request
+      if (request.userId !== req.user.id && req.user.role !== Role.ADMIN) {
+        throw new Error("User is not authorised to view this request");
       }
 
       // Get the user for the request
