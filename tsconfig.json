@@ -2,12 +2,12 @@
   "compilerOptions": {
     "target": "es2016", // Specify the ECMAScript version to target
     "module": "commonjs", // Specify the module system to use
-    "rootDir": "./src", // Specify the root directory of the source files
     "outDir": "./dist", // Specify the output directory for compiled files
     "esModuleInterop": true, // Enable compatibility with CommonJS modules
     "forceConsistentCasingInFileNames": true, // Enforce consistent casing in file names
     "strict": true, // Enable strict type checking
     "noUncheckedIndexedAccess": true, // Enable strict checking of indexed access
     "skipLibCheck": true // Skip type checking of declaration files
-  }
+  },
+  "include": ["src/**/*", "tests/**/*"]
 }

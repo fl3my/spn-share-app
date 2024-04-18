@@ -15,26 +15,34 @@ export class DataStoreContext {
   public request: RequestModel;
   public contact: ContactModel;
 
-  constructor() {
-    const userDb = new DataStore({ filename: "data/users.db", autoload: true });
+  constructor(inMemory: boolean = false) {
+    const userDb = inMemory
+      ? new DataStore()
+      : new DataStore({ filename: "data/users.db", autoload: true });
     this.user = new UserModel(userDb);
 
-    const donationItemDb = new DataStore({
-      filename: "data/donation-items.db",
-      autoload: true,
-    });
+    const donationItemDb = inMemory
+      ? new DataStore()
+      : new DataStore({
+          filename: "data/donation-items.db",
+          autoload: true,
+        });
     this.donationItem = new DonationItemModel(donationItemDb);
 
-    const requestDb = new DataStore({
-      filename: "data/requests.db",
-      autoload: true,
-    });
+    const requestDb = inMemory
+      ? new DataStore()
+      : new DataStore({
+          filename: "data/requests.db",
+          autoload: true,
+        });
     this.request = new RequestModel(requestDb);
 
-    const contactDb = new DataStore({
-      filename: "data/contacts.db",
-      autoload: true,
-    });
+    const contactDb = inMemory
+      ? new DataStore()
+      : new DataStore({
+          filename: "data/contacts.db",
+          autoload: true,
+        });
     this.contact = new ContactModel(contactDb);
   }
 }

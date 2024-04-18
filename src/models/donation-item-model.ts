@@ -71,7 +71,7 @@ export class DonationItemModel extends DocumentModel<DonationItemDocument> {
 
       // Check if the donation exists
       if (!donationItem) {
-        throw new Error("Doantion item not found");
+        throw new Error("Donation item not found");
       }
 
       // Check if the donation item is already completed or claimed
