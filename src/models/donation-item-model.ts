@@ -33,7 +33,7 @@ interface Address {
 
 // Define an interface for the donation item document object
 export interface DonationItemDocument extends Document {
-  userId?: string;
+  userId: string;
   name: string;
   description: string;
   storageRequirement: StorageRequirement;

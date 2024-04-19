@@ -33,6 +33,7 @@ const insertUsers = async () => {
       role: Role.ADMIN,
       firstname: "Admin",
       lastname: "User",
+      mobile: "0123456789",
       address: {
         street: "10 Salmona St",
         city: "Glasgow",
@@ -42,6 +43,7 @@ const insertUsers = async () => {
           longitude: -4.248875,
         },
       },
+      score: 0,
     },
     {
       _id: "b",
@@ -50,6 +52,8 @@ const insertUsers = async () => {
       role: Role.PANTRY,
       firstname: "Pantry",
       lastname: "User",
+      mobile: "0123456789",
+      score: 0,
       address: {
         street: "22 Lilybank Rd",
         city: "Port Glasgow",
@@ -67,6 +71,8 @@ const insertUsers = async () => {
       role: Role.WAREHOUSE,
       firstname: "Warehouse",
       lastname: "User",
+      mobile: "0123456789",
+      score: 0,
       address: {
         street: "150 Albert Dr",
         city: "Glasgow",
@@ -84,6 +90,8 @@ const insertUsers = async () => {
       role: Role.DONATOR,
       firstname: "Donator",
       lastname: "User",
+      mobile: "0123456789",
+      score: 0,
       address: {
         street: "210 Garscube Rd",
         city: "Glasgow",
@@ -101,6 +109,8 @@ const insertUsers = async () => {
       role: Role.DONATOR,
       firstname: "Donator",
       lastname: "User",
+      mobile: "0123456789",
+      score: 0,
       address: {
         street: "3 Kelvingrove St",
         city: "Glasgow",

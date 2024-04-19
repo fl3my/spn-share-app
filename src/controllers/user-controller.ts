@@ -35,6 +35,7 @@ export class UserController {
       await this.modelProvider.user.registerUser({
         ...newUser,
         address: { ...newUser.address, coordinates },
+        score: 0,
       });
 
       // Redirect to the users page

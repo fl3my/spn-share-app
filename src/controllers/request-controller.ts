@@ -264,6 +264,9 @@ export class RequestController {
         requestId
       );
 
+      // Increment the donators score
+      await this.dsContext.user.incrementScore(donationItem.userId, 10);
+
       res.redirect("/requests");
     } catch (error) {
       res.render("error", { error });

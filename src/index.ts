@@ -19,6 +19,7 @@ import {
   authRouter,
   contactRouter,
   donationItemRouter,
+  homeRouter,
   requestRouter,
   shopRouter,
   userRouter,
@@ -96,14 +97,7 @@ app.use(
   requestRouter
 );
 app.use("/contacts", contactRouter);
-
-app.get("/about", (req, res) => {
-  res.render("about");
-});
-
-app.get("/", (req, res) => {
-  res.render("home");
-});
+app.use("/", homeRouter);
 
 // Catch-all route
 app.use("*", (req, res) => {

@@ -78,6 +78,7 @@ export class AuthController {
       const userWithRole = {
         ...validatedRegister,
         role: Role.DONATOR,
+        score: 0,
       };
 
       // Register the user

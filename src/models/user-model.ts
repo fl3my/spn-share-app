@@ -12,6 +12,7 @@ export interface UserDocument extends Document {
   lastname: string;
   role: Role;
   mobile: string;
+  score: number;
   address?: {
     street: string;
     city: string;
@@ -94,6 +95,41 @@ export class UserModel extends DocumentModel<UserDocument> {
       return await argon2.verify(storedPassword, providedPassword);
     } catch (error) {
       console.error("Error verifying password: ", error);
+      throw error;
+    }
+  }
+
+  // Return the leaderboard results
+  async getLeaderboard(results: number = 3): Promise<UserDocument[]> {
+    try {
+      return await this.db
+        .findAsync({ role: Role.DONATOR })
+        .sort({ score: -1 })
+        .limit(results);
+    } catch (error) {
+      console.error("Error getting leaderboard: ", error);
+      throw error;
+    }
+  }
+
+  // Increment the users score
+  async incrementScore(userId: string, increment: number): Promise<void> {
+    try {
+      // Find the user by ID
+      const user = await this.findById(userId);
+
+      // Check if the user exists
+      if (!user) {
+        throw new Error("User not found");
+      }
+
+      // Increment the user's score
+      user.score += increment;
+
+      // Update the user in the database
+      await this.update(userId, user);
+    } catch (error) {
+      console.error("Error incrementing user score: ", error);
       throw error;
     }
   }

@@ -45,6 +45,7 @@ interface UserSession {
   id: string;
   email: string;
   role: string;
+  score: number;
 }
 
 // Deserialize the user
@@ -63,6 +64,7 @@ passport.deserializeUser(async (id: string, done) => {
       id: user._id as string,
       email: user.email as string,
       role: user.role as string,
+      score: user.score as number,
     };
     // Return the user session
     done(null, userSession);
