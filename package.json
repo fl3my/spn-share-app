@@ -7,7 +7,7 @@
     "build": "tsc",
     "start": "node dist/index.js",
     "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
-    "sass": "sass --watch src/scss:public/css",
+    "sass": "sass src/scss:public/css",
     "test": "jest",
     "seed": "ts-node-dev --transpile-only src/scripts/seed.ts"
   },
