@@ -19,6 +19,8 @@ describe("UserModel", () => {
       firstname: "John",
       lastname: "Doe",
       role: Role.DONATOR,
+      mobile: "1234567890",
+      score: 0,
     };
 
     await userModel.registerUser(newUser);
@@ -33,6 +35,8 @@ describe("UserModel", () => {
         firstname: "John",
         lastname: "Doe",
         role: Role.DONATOR,
+        mobile: "1234567890",
+        score: 0,
       };
 
       // Act
@@ -51,6 +55,8 @@ describe("UserModel", () => {
         firstname: "John",
         lastname: "Doe",
         role: Role.DONATOR,
+        mobile: "1234567890",
+        score: 0,
       };
 
       // Act
@@ -68,6 +74,8 @@ describe("UserModel", () => {
         firstname: "John",
         lastname: "Doe",
         role: Role.DONATOR,
+        mobile: "1234567890",
+        score: 0,
       };
 
       // Act
