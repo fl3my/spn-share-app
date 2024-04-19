@@ -40,3 +40,11 @@ export const requestStatusColour = function (status: RequestStatus) {
       return "";
   }
 };
+
+export const getEnv = function (key: string) {
+  return process.env[key];
+};
+
+export const json = function (value: any) {
+  return JSON.stringify(value);
+};

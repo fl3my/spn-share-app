@@ -45,10 +45,15 @@
             <li class="nav-item">
               <a class="nav-link" href="/contacts/new">Contact</a>
             </li>
-            {{#if (eq currentUser.role "PANTRY") }}
+            {{#if (eq currentUser.role "PANTRY")}}
               <li class="nav-item">
                 <a class="nav-link" href="/shop">Shop Donations</a>
               </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/requests">Your Requests</a>
+              </li>
+            {{/if}}
+            {{#if (eq currentUser.role "WAREHOUSE")}}
               <li class="nav-item">
                 <a class="nav-link" href="/requests">Your Requests</a>
               </li>

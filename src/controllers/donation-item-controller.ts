@@ -478,7 +478,11 @@ export class DonationItemController {
 
           return {
             ...request,
-            user,
+            user: {
+              email: user?.email,
+              firstname: user?.firstname,
+              lastname: user?.lastname,
+            },
             distance,
           };
         })
@@ -486,6 +490,7 @@ export class DonationItemController {
 
       res.render("donation-items/requests/index", {
         requests: requestsWithUser,
+        donationLocation: donationItem.address.coordinates,
       });
     } catch (error) {
       res.status(500).render("error", { error: error });
@@ -537,11 +542,6 @@ export class DonationItemController {
         throw new Error("No user ID found");
       }
 
-      // Check if the user is authorised to view the request
-      if (request.userId !== req.user.id && req.user.role !== Role.ADMIN) {
-        throw new Error("User is not authorised to view this request");
-      }
-
       // Get the user for the request
       const user = await this.dsContext.user.findById(request.userId);
 
@@ -551,6 +551,11 @@ export class DonationItemController {
 
       if (!donationItem) {
         throw new Error("Donation Item not found");
+      }
+
+      // Check if the user is authorised to view the request
+      if (donationItem.userId !== req.user.id && req.user.role !== Role.ADMIN) {
+        throw new Error("User is not authorised to view this request");
       }
 
       res.render("donation-items/requests/show", {

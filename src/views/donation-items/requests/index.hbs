@@ -2,6 +2,7 @@
 <div class="rounded shadow p-3 bg-light">
   <a href="/donation-items" class="btn btn-primary mb-3">Go back</a>
   {{#if requests}}
+    <div id="map" style="width: 100%; height: 400px;"></div>
     <table class="table table-striped table-light">
       <thead>
         <tr>
@@ -34,3 +35,36 @@
     <p>Sorry, there are currently no requests for this item</p>
   {{/if}}
 </div>
+
+<!-- Tom Tom Maps JS -->
+<script
+  src="https://api.tomtom.com/maps-sdk-for-web/cdn/6.x/6.25.0/maps/maps-web.min.js"
+></script>
+<script>
+  const apiKey = "{{getEnv "TOMTOM_API_KEY"}}";
+  const homeLocation = { lat: "{{donationLocation.latitude}}", lng: "{{donationLocation.longitude}}" }
+
+  // Create the map
+  var map = tt.map({ key: apiKey, container: 'map', center: [homeLocation.lng, homeLocation.lat], zoom: 9 });
+
+  // Create a marker
+  function createMarker(position, color, popupText) {
+      var marker = new tt.Marker({ color: color })
+          .setLngLat(position)
+          .setPopup(new tt.Popup().setHTML(popupText))
+          .addTo(map);
+  }
+
+  // Get the requests from the server
+  const data = JSON.parse('{{{json requests}}}');
+
+  // Place marker for home location
+  createMarker([homeLocation.lng, homeLocation.lat], 'green', 'This donations location')
+
+  // Itterate over the requests and create a marker for each
+  data.forEach((request) => {
+    const {latitude, longitude} = request.address.coordinates;
+    const colour = request.deliveryMethod === "RECIEVE" ? 'blue' : 'orange';
+      createMarker([longitude, latitude], colour, `<a href="requests/${request._id}">View Request</a>`);
+  });
+</script>
