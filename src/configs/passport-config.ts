@@ -1,9 +1,10 @@
 import passport from "passport";
 import { Strategy as LocalStrategy } from "passport-local";
+import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 
 import { dsContext } from "../models/data-store-context";
+import { Role } from "../models/enums";
 
-// Get the user model instance
 // Create a local strategy
 passport.use(
   new LocalStrategy(
@@ -19,6 +20,7 @@ passport.use(
         // Check if the user is valid and the password is correct
         const isValid =
           user &&
+          user.password &&
           (await dsContext.user.verifyPassword(user.password, password));
 
         // If the user is not valid or the password is incorrect, return false
@@ -30,6 +32,47 @@ passport.use(
         return done(null, user);
       } catch (err) {
         return done(err);
+      }
+    }
+  )
+);
+
+// Create a google strategy
+passport.use(
+  new GoogleStrategy(
+    {
+      clientID: process.env.GOOGLE_CLIENT_ID as string,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+      callbackURL: "/auth/google/callback",
+    },
+    async (accessToken, refreshToken, profile, done) => {
+      try {
+        // Check if the email is found in the profile
+        if (!profile.emails?.[0]?.value) {
+          return done(null, false, {
+            message: "No email found in the Google account.",
+          });
+        }
+
+        // Get the user by email
+        const user = await dsContext.user.findByEmail(profile.emails[0].value);
+
+        // If the user does not exist, create a new user
+        if (!user) {
+          const newUser = await dsContext.user.insert({
+            email: profile.emails?.[0]?.value ?? "",
+            role: Role.DONATOR,
+            score: 0,
+            firstname: profile.name?.givenName ?? "",
+            lastname: profile.name?.familyName ?? "",
+          });
+          return done(null, newUser);
+        }
+
+        // Return the user
+        return done(null, user);
+      } catch (err) {
+        return done(err as Error);
       }
     }
   )

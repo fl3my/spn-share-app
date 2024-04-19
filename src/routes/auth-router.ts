@@ -32,4 +32,10 @@ authRouter.get("/profile", authController.getProfile);
 // PATCH: /auth/profile
 authRouter.patch("/profile", authController.updateProfile);
 
+// GET: /auth/google
+authRouter.get("/google", authController.googleLogin);
+
+// GET: /auth/google/callback
+authRouter.get("/google/callback", authController.googleCallback);
+
 export { authRouter };

@@ -7,11 +7,11 @@ import { Role } from "./enums";
 // Define an inteface for the user document object
 export interface UserDocument extends Document {
   email: string;
-  password: string;
+  password?: string;
   firstname: string;
   lastname: string;
   role: Role;
-  mobile: string;
+  mobile?: string;
   score: number;
   address?: {
     street: string;
@@ -39,6 +39,10 @@ export class UserModel extends DocumentModel<UserDocument> {
       throw new Error("User already exists");
     }
 
+    if (user.password === undefined) {
+      throw new Error("Password is required");
+    }
+    
     // Hash the user's password
     user.password = await this.hashPassword(user.password);
 

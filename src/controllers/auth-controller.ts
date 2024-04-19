@@ -183,4 +183,14 @@ export class AuthController {
       }
     }
   };
+
+  googleLogin = passport.authenticate("google", {
+    scope: ["profile", "email"],
+  });
+
+  // Callback for Google OAuth
+  googleCallback = passport.authenticate("google", {
+    failureRedirect: "/auth/login",
+    successRedirect: "/",
+  });
 }
