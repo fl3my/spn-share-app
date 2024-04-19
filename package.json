@@ -4,7 +4,8 @@
   "description": "",
   "main": "dist/index.js",
   "scripts": {
-    "build": "tsc",
+    "build": "npm run clean && tsc",
+    "clean": "rimraf dist data",
     "start": "node dist/src/index.js",
     "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
     "sass": "sass src/scss:public/css",
@@ -46,6 +47,7 @@
     "nedb-promises-session-store": "^1.0.4",
     "passport": "^0.7.0",
     "passport-local": "^1.0.0",
+    "rimraf": "^5.0.5",
     "sharp": "^0.33.3",
     "uuid": "^9.0.1",
     "zod": "^3.22.4"
