@@ -4,12 +4,13 @@ import { z } from "zod";
 import { DataStoreContext } from "../models/data-store-context";
 import { newUserSchema, updatedUserSchema } from "../schemas/user-schemas";
 import { geocodeAddress } from "../utils/geocode";
+import { Role } from "../models/enums";
 
 export class UserController {
-  constructor(private modelProvider: DataStoreContext) {}
+  constructor(private dsContext: DataStoreContext) {}
   // Get all users
   getAllUsers = async (req: Request, res: Response) => {
-    const users = await this.modelProvider.user.findAll();
+    const users = await this.dsContext.user.findAll();
     res.render("users/index", { users });
   };
 
@@ -32,7 +33,7 @@ export class UserController {
       );
 
       // Insert the new user
-      await this.modelProvider.user.registerUser({
+      await this.dsContext.user.registerUser({
         ...newUser,
         address: { ...newUser.address, coordinates },
         score: 0,
@@ -57,7 +58,7 @@ export class UserController {
       return res.json({ error: "User ID is required" });
     }
     // Get the user by ID
-    const user = await this.modelProvider.user.findById(req.params.id);
+    const user = await this.dsContext.user.findById(req.params.id);
 
     res.render("users/edit", { user });
   };
@@ -75,6 +76,11 @@ export class UserController {
       // Validate the request body
       const updatedUser = updatedUserSchema.parse(req.body);
 
+      // Check if the user is trying to update their own role
+      if (req.user && req.params.id === req.user.id) {
+        throw new Error("You cannot update your own role");
+      }
+
       const coordinates = await geocodeAddress(
         updatedUser.address.street,
         updatedUser.address.city,
@@ -82,7 +88,7 @@ export class UserController {
       );
 
       // Update the user
-      await this.modelProvider.user.update(req.params.id, {
+      await this.dsContext.user.update(req.params.id, {
         ...updatedUser,
         address: { ...updatedUser.address, coordinates },
       });
@@ -111,7 +117,7 @@ export class UserController {
       return res.status(500).render("error", { error: "User ID is required" });
     }
     // Get the user by ID
-    const user = await this.modelProvider.user.findById(req.params.id);
+    const user = await this.dsContext.user.findById(req.params.id);
 
     res.render("users/delete", { user });
   };
@@ -123,7 +129,7 @@ export class UserController {
         throw new Error("User ID is required");
       }
       // Delete the user by ID
-      await this.modelProvider.user.remove(req.params.id);
+      await this.dsContext.user.remove(req.params.id);
 
       res.redirect("/users");
     } catch (error) {
@@ -138,7 +144,7 @@ export class UserController {
         throw new Error("User ID is required");
       }
       // Get the user by ID
-      const user = await this.modelProvider.user.findById(req.params.id);
+      const user = await this.dsContext.user.findById(req.params.id);
 
       if (!user) {
         throw new Error("User not found");
