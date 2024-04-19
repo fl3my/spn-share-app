@@ -82,7 +82,7 @@ describe("UserModel", () => {
       const result = await userModel.registerUser(newUser);
 
       // Assert
-      expect(result.password).toMatch(newUser.password);
+      expect(result.password).toMatch(newUser.password ?? "");
 
       // Use a regex for the argon2 hash
       expect(result.password).toMatch(
