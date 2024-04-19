@@ -10,6 +10,9 @@
       type="text/css"
     />
 
+    <!-- bootstrap-icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
       <!-- Favicon -->
     <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png">
@@ -79,12 +82,18 @@
                 <ul class="dropdown-menu">
                   <li><a class="dropdown-item" href="/users">Manage users</a></li>
                   <li><a class="dropdown-item" href="/donation-items">Manage donation items</a></li>
+                  <li><a class="dropdown-item" href="/contacts">Manage messages</a></li>
                 </ul>
               </li>
             </ul>
           {{/if}}
           <ul class="navbar-nav">
             {{> loginRegister }}
+            {{#if (or (eq currentUser.role "DONATOR") (eq currentUser.role "PANTRY")) }}
+              <li class="nav-item">
+                <a class="btn btn-secondary" href="/donation-items/new">Donate</a>
+              </li>
+            {{/if}}
           </ul>
         </div>
       </div>

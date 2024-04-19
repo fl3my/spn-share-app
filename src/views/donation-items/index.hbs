@@ -1,6 +1,10 @@
 <h1 class="mt-3">All donation items</h1>
 <div class="p-3 bg-light rounded shadow">
   {{#if donationItems}}
+    <div class="d-flex align-items-center">
+      <i class="bi bi-info-circle me-2"></i>
+      <div>Below are all the items you have donated, the red bubble on the all requests button shows how many pantrys have made a request.</div>
+    </div>
     <table class="table table-light table-striped">
       <thead>
         <tr>
@@ -52,5 +56,5 @@
     <p>You haven't make any donation yet</p>
   {{/if}}
 
-  <a href="/donation-items/new">Create a new donation item</a>
+  <a class="mt-3" href="/donation-items/new">Create a new donation item</a>
 </div>

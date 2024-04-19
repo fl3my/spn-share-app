@@ -11,6 +11,7 @@ export interface UserDocument extends Document {
   firstname: string;
   lastname: string;
   role: Role;
+  mobile: string;
   address?: {
     street: string;
     city: string;
