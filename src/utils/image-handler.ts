@@ -8,7 +8,7 @@ export const saveImage = async (file: Express.Multer.File): Promise<string> => {
   const filename = uuidv4() + path.extname(file.originalname);
 
   // Define the uploads directory path
-  const uploadsDir = path.join(__dirname, "..", "..", "public", "uploads");
+  const uploadsDir = path.resolve(process.cwd(), "public", "uploads");
 
   // Check if the uploads directory exists and if not, create it
   if (!fs.existsSync(uploadsDir)) {
@@ -16,14 +16,7 @@ export const saveImage = async (file: Express.Multer.File): Promise<string> => {
   }
 
   // Save the image to the uploads directory
-  const filePath = path.join(
-    __dirname,
-    "..",
-    "..",
-    "public",
-    "uploads",
-    filename
-  );
+  const filePath = path.join(uploadsDir, filename);
 
   // Resize the image to 640x640 pixels
   const buffer = await sharp(file.buffer)
@@ -39,10 +32,8 @@ export const saveImage = async (file: Express.Multer.File): Promise<string> => {
 
 export const deleteImage = (filename: string): void => {
   // Generate the file path
-  const oldImagePath = path.join(
-    __dirname,
-    "..",
-    "..",
+  const oldImagePath = path.resolve(
+    process.cwd(),
     "public",
     "uploads",
     filename
