@@ -12,7 +12,7 @@ First, install the programs required to run the application:
 Next, clone the repository and install dependancies:
 
 ```
-git clone git@github.com:fl3my/spn-share-app
+git clone https://github.com/fl3my/spn-share-app.git
 ```
 
 ```
