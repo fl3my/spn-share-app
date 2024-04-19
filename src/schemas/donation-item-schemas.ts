@@ -9,7 +9,7 @@ import {
 
 export const measurementSchema = z.object({
   type: z.nativeEnum(MeasurementType),
-  value: z.coerce.number(),
+  value: z.coerce.number().min(1).max(100),
 });
 
 export const dateInfoSchema = z
