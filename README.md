@@ -31,6 +31,8 @@ PORT = "3000"
 ESSION_SECRET = "your_session_secret" # Replace with your actual session secret
 TOMTOM_API_KEY = "your_api_key" # Replace with your actual API key
 SEED_USERS_COMMON_PASSWORD = "your_users_password"  # Replace with your actual password
+GOOGLE_CLIENT_ID = "your_client_id"  # Replace with your actual client ID
+GOOGLE_CLIENT_SECRET = "your_client_secret" # Replace with your actual client secret
 ```
 
 Then seed the datastore:
@@ -62,6 +64,7 @@ npm run dev
 - Different date types to allow for more precise search for items.
 - Added donation item storage properties as some items may need to be frozen or in fridge.
 - SCSS to allow the default bootstrap theme colours to be altered easily.
+-
 
 ## Entity relationship diagram
 

@@ -4,7 +4,6 @@ import { z } from "zod";
 import { DataStoreContext } from "../models/data-store-context";
 import { newUserSchema, updatedUserSchema } from "../schemas/user-schemas";
 import { geocodeAddress } from "../utils/geocode";
-import { Role } from "../models/enums";
 
 export class UserController {
   constructor(private dsContext: DataStoreContext) {}
@@ -44,7 +43,13 @@ export class UserController {
     } catch (error) {
       if (error instanceof z.ZodError) {
         // Handle zod validation errors
-        res.status(400).render("users/new", { errors: error.errors });
+
+        //Map over the errors and return the first error message for each field
+        const errorMessages = error.errors.map(
+          (err) => `${err.path[0]}: ${err.message}`
+        );
+
+        res.status(400).render("users/new", { errors: errorMessages });
       } else {
         // Other errors
         res.status(500).render("users/new", { errors: [error as Error] });
@@ -98,8 +103,14 @@ export class UserController {
     } catch (error) {
       if (error instanceof z.ZodError) {
         // Handle zod validation errors
+
+        //Map over the errors and return the first error message for each field
+        const errorMessages = error.errors.map(
+          (err) => `${err.path[0]}: ${err.message}`
+        );
+
         res.status(400).render("users/edit", {
-          errors: error.errors,
+          errors: errorMessages,
           user: { ...req.body, _id },
         });
       } else {

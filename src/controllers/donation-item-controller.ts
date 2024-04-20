@@ -221,8 +221,14 @@ export class DonationItemController {
     } catch (error) {
       if (error instanceof z.ZodError) {
         // Handle zod validation errors
+
+        //Map over the errors and return the first error message for each field
+        const errorMessages = error.errors.map(
+          (err) => `${err.path[0]}: ${err.message}`
+        );
+
         res.status(400).render("donation-items/new", {
-          errors: error.errors,
+          errors: errorMessages,
           donationItem: req.body,
           formOptions,
         });
@@ -349,8 +355,14 @@ export class DonationItemController {
     } catch (error) {
       if (error instanceof z.ZodError) {
         // Handle zod validation errors
+
+        //Map over the errors and return the first error message for each field
+        const errorMessages = error.errors.map(
+          (err) => `${err.path[0]}: ${err.message}`
+        );
+
         res.status(400).render("donation-items/edit", {
-          errors: error.errors,
+          errors: errorMessages,
           donationItem: { ...req.body, imageFilename, _id },
           formOptions,
         });

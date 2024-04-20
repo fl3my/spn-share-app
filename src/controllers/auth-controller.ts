@@ -91,7 +91,11 @@ export class AuthController {
     } catch (error) {
       if (error instanceof z.ZodError) {
         // Handle zod validation errors
-        res.status(400).render("auth/register", { errors: error.errors });
+        //Map over the errors and return the first error message for each field
+        const errorMessages = error.errors.map(
+          (err) => `${err.path[0]}: ${err.message}`
+        );
+        res.status(400).render("auth/register", { errors: errorMessages });
       } else {
         // Other errors
         res.status(500).render("auth/register", { errors: [error as Error] });
@@ -170,8 +174,13 @@ export class AuthController {
       const _id = req.body._id;
       if (error instanceof z.ZodError) {
         // Handle zod validation errors
+
+        const errorMessages = error.errors.map(
+          (err) => `${err.path[0]}: ${err.message}`
+        );
+
         res.status(400).render("auth/profile", {
-          errors: error.errors,
+          errors: errorMessages,
           user: { ...req.body, _id },
         });
       } else {

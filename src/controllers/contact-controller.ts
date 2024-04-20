@@ -29,7 +29,11 @@ export class ContactController {
       });
     } catch (error) {
       if (error instanceof z.ZodError) {
-        res.render("contact/new", { errors: error.errors });
+        //Map over the errors and return the first error message for each field
+        const errorMessages = error.errors.map(
+          (err) => `${err.path[0]}: ${err.message}`
+        );
+        res.render("contact/new", { errors: errorMessages });
       } else {
         res.render("contact/new", { error });
       }
