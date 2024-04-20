@@ -36,7 +36,7 @@ export class AuthController {
           if (!user) {
             // The authentication was unsuccessful
             return res.status(401).render("auth/login", {
-              errors: [{ message: "Incorrect username or password." }],
+              errors: ["Incorrect username or password."],
             });
           }
 
@@ -55,9 +55,13 @@ export class AuthController {
         }
       )(req, res, next);
     } catch (error) {
+      console.log(error);
       if (error instanceof z.ZodError) {
         // Handle zod validation errors
-        res.status(400).render("auth/login", { errors: error.errors });
+        const errorMessages = error.errors.map(
+          (err) => `${err.path[0]}: ${err.message}`
+        );
+        res.status(400).render("auth/login", { errors: errorMessages });
       } else {
         // Other errors
         res.status(500).render("auth/login", { errors: [error as Error] });

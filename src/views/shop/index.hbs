@@ -25,6 +25,7 @@
       <input
         type="number"
         name="daysAfterBestBefore"
+        min="0"
         value="{{query.daysAfterBestBefore}}"
         class="form-control"
       />
@@ -37,6 +38,7 @@
         type="number"
         name="daysAfterProduction"
         value="{{query.daysAfterProduction}}"
+        min="0",
         class="form-control"
       />
       <div class="form-text">How many days after the production of a item are you willing to accept.</div>

@@ -16,7 +16,7 @@ export class HomeController {
   // Return the leaderboard page
   public async leaderboardPage(req: Request, res: Response) {
     // Get the users from the data store
-    const users = await dsContext.user.getLeaderboard();
+    const users = await dsContext.user.getLeaderboard(10);
 
     // Map the user objects to a simpler object for rendering
     const leaderboardUsers = users.map((user, index) => {

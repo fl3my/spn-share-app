@@ -139,6 +139,14 @@ export class UserController {
       if (!req.params.id) {
         throw new Error("User ID is required");
       }
+
+      // Prevent self deletion
+      if (req.params.id == req.user?.id) {
+        return res
+          .status(403)
+          .render("error", { error: "You cannot delete yourself" });
+      }
+
       // Delete the user by ID
       await this.dsContext.user.remove(req.params.id);
 
@@ -160,7 +168,6 @@ export class UserController {
       if (!user) {
         throw new Error("User not found");
       }
-
       res.render("users/show", { user });
     } catch (error) {
       res.status(500).render("error", { error: error });

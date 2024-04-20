@@ -96,7 +96,7 @@ app.use(
 app.use("/shop", ensureInRole(Role.PANTRY), shopRouter);
 app.use(
   "/requests",
-  ensureInRoles([Role.DONATOR, Role.PANTRY, Role.WAREHOUSE]),
+  ensureInRoles([Role.PANTRY, Role.WAREHOUSE]),
   requestRouter
 );
 app.use("/contacts", contactRouter);
