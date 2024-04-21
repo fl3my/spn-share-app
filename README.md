@@ -19,21 +19,8 @@ git clone https://github.com/fl3my/spn-share-app.git
 npm install
 ```
 
-Before seeding the datastore add the enviroment variables:
-
-```
-touch .env
-```
-
-```
-HOST = "localhost"
-PORT = "3000"
-SESSION_SECRET = "your_session_secret" # Replace with your actual session secret
-TOMTOM_API_KEY = "your_api_key" # Replace with your actual API key
-SEED_USERS_COMMON_PASSWORD = "your_users_password"  # Replace with your actual password
-GOOGLE_CLIENT_ID = "your_client_id"  # Replace with your actual client ID
-GOOGLE_CLIENT_SECRET = "your_client_secret" # Replace with your actual client secret
-```
+Before seeding the datastore, rename ".env.development" to ".env".
+**NOTE: This is not safe for a public git repository as API keys are exposed!**
 
 After, complile the SASS sheet:
 
@@ -52,6 +39,16 @@ Now, start the development enviroment with the following command:
 ```
 npm run dev
 ```
+
+# Seed Users
+
+**NOTE: All seed users have the same password set up in the ".env" file, called "SEED_USERS_COMMON_PASSWORD"**
+
+- email: admin@example.com
+- email: warehouse@example.com
+- email: pantry@example.com
+- email: donator1@example.com
+- email: donator2@example.com
 
 ## Client requirements
 
