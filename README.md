@@ -42,13 +42,15 @@ npm run dev
 
 # Seed Users
 
-**NOTE: All seed users have the same password set up in the ".env" file, called "SEED_USERS_COMMON_PASSWORD"**
+**NOTE: All seed users have the same password set up in the ".env" file at time of "npm run seed", called "SEED_USERS_COMMON_PASSWORD", the default is "password" if not set**
 
-- email: admin@example.com
-- email: warehouse@example.com
-- email: pantry@example.com
-- email: donator1@example.com
-- email: donator2@example.com
+| Role      | Email                 |
+| --------- | --------------------- |
+| Admin     | admin@example.com     |
+| Warehouse | warehouse@example.com |
+| Pantry    | pantry@example.com    |
+| Donator   | donator1@example.com  |
+| Donator   | donator2@example.com  |
 
 ## Client requirements
 
