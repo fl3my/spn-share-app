@@ -35,6 +35,12 @@ GOOGLE_CLIENT_ID = "your_client_id"  # Replace with your actual client ID
 GOOGLE_CLIENT_SECRET = "your_client_secret" # Replace with your actual client secret
 ```
 
+After, complile the SASS sheet:
+
+```
+npm run sass
+```
+
 Then seed the datastore:
 
 ```
@@ -65,6 +71,17 @@ npm run dev
 - Added donation item storage properties as some items may need to be frozen or in fridge.
 - SCSS to allow the default bootstrap theme colours to be altered easily.
 -
+
+## Screenshots
+
+![Image description](https://i.imgur.com/cTXC2hr.png)
+The image above shows the shopping page that a pantry user would use to request a donation.
+
+![Image description](https://i.imgur.com/byYA2a5.png)
+The image above shows how a donator would view all the items they have donated.
+
+![Image description](https://i.imgur.com/0YVyUQD.png)
+The image abouve shows how a donator would view all the requests from pantries for an item they have donated.
 
 ## Entity relationship diagram
 
@@ -123,4 +140,12 @@ npm run dev
         float latitiude
         float longitude
     }
+```
+
+## Testing
+
+To test the application:
+
+```
+npm run test
 ```
